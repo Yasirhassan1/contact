@@ -83,11 +83,11 @@ app.get("/search/:character", (req: Request, res: Response) => {
 
     const search = character.toLowerCase();
 
-    const target = contacts.find((cur) =>
+    const targetIds = contacts.filter((cur) =>
       cur.name.toLowerCase().includes(search)
-    )?.id;
+    )?.map((cur)=> cur.id);
 
-    if (target == null) {
+    if (targetIds == null) {
       return res.json({
         success: false,
         id: null,
@@ -96,7 +96,7 @@ app.get("/search/:character", (req: Request, res: Response) => {
 
     res.json({
       success: true,
-      id: target,
+      ids: targetIds,
     });
   } catch (err) {
     console.log(err);

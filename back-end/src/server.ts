@@ -6,8 +6,16 @@ import contactModel from "./models/contact.model.ts";
 dotenv.config()
 const app = express();
 
-app.use(cors());
+app.use(cors({
+  origin: [
+    "https://contact-3k4v.vercel.app",
+    "http://localhost:3000"
+  ],
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true,
+}));
 app.use(express.json());
+
 
 
 const PORT = Number(process.env.PORT) ||5000;

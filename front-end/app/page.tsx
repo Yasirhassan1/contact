@@ -4,10 +4,12 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 
 type Contact = {
-        id: number,
+        id: string,
         name: string,
         phoneNo: string,
         email: string,
+        createdAt?: string;
+
 };
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL as string;
@@ -17,14 +19,7 @@ async function fetchContacts():Promise<Contact[]>{
   return data.json()
 }
 
-function deleteContact(id:number){
-  axios.delete(`${apiUrl}/delete/${id}`)
-  .then((response)=>{
-  })
-   .catch(function (error) {
-    console.log(error);
-  });
-}
+
 
 
 
@@ -33,19 +28,28 @@ export default function Page(){
   const [contacts, setContacts]  = useState<Contact[]>([])
   const [showForm, setShowForm] = useState<boolean>(false)
   const [isEdit, setIsEdit] = useState<boolean>(false)
-  const [editId, setEditId] = useState<number>(0)
+  const [editId, setEditId] = useState<string>("")
   const [searchName, setSearchName] = useState<string>("")
-  const [searchIds, setSearchIds] = useState<number[] | null>([]) 
+  const [searchIds, setSearchIds] = useState<string[] | null>([]) 
   const [isSearched, setIsSearched] = useState<boolean>(false)
 
  const [form, setForm] = useState<Contact>({
-  id: 0,
+  id: "",
   name: "",
   phoneNo: "",
   email: ""
 });
 
-
+function deleteContact(id:string){
+  axios.delete(`${apiUrl}/delete/${id}`)
+  .then((response)=>{
+    setContacts(response.data.contacts)
+    
+  })
+   .catch(function (error) {
+    console.log(error);
+  });
+}
 function searchContact(name: string) {
   if(name){
 
@@ -72,7 +76,7 @@ setIsSearched(true)
   }
 }
 
-function updateContact(id:number){
+function updateContact(id:string){
   axios.put(`${apiUrl}/edit/${id}`, {
     id: form.id,
     name:form.name,
@@ -112,13 +116,12 @@ const phoneNo = formData.get("phoneNo")
 const email = formData.get("email")
 
 axios.post(`${apiUrl}/create`, {
-    id: contacts.length+1,
     name: name,
     phoneNo: phoneNo,
     email:email
   })
   .then(function (response) {
-    
+    setContacts(response.data.contacts)
 
   })
   .catch(function (error) {
@@ -130,12 +133,13 @@ setShowForm(false)
 
 
 
-function setFormData(id:number){
+function setFormData(id:string){
+  const find  = contacts?.find((cur)=> id === cur.id)
   setForm({
     id: id,
-    name:contacts[id-1].name,
-    phoneNo:contacts[id-1].phoneNo,
-    email:contacts[id-1].email,
+    name:find?.name as string,
+    phoneNo:find?.phoneNo as string,
+    email:find?.email as string,
 
   })
 }

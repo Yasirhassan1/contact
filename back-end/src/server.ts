@@ -143,9 +143,5 @@ let contacts = await contactModel.find();
   }
 });
 
-
-
-app.listen(PORT, ()=>{
-    console.log("App is running on port ", PORT)
-})
+export default app;
 

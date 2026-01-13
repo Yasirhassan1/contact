@@ -1,4 +1,4 @@
-import express, { type NextFunction, type Request, type Response } from "express";
+import express, { type Request, type Response } from "express";
 import cors from "cors";
 import dotenv from 'dotenv'
 import connectDB from "./dbConnection/dbConnection.ts";
@@ -20,22 +20,6 @@ app.use(express.json());
 
 const PORT = Number(process.env.PORT) ||5000;
 connectDB()
-let contacts = [
-    {
-        id: 1,
-        name: "Amir",
-        phoneNo: "03554769934",
-        email: "amir@gmail.com",
-
-    },
-
-   
-]
-
-app.use("/hey", (req:Request, res:Response, next:NextFunction)=>{
-    console.log("middle ware")
-    next()
-})
 
 app.get("/", async (req:Request, res:Response)=>{
   try{

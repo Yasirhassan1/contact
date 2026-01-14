@@ -6,4 +6,5 @@ export const corsMiddleware =  cors({
       ],
       methods: ["GET", "POST", "PUT", "DELETE"],
       credentials: true,
+
 });

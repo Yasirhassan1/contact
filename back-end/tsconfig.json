@@ -7,7 +7,7 @@
 
     // Environment Settings
     // See also https://aka.ms/tsconfig/module
-    "module": "nodenext",
+    // "module": "nodenext",
     "target": "esnext",
     "types": [],
     // For nodejs:
@@ -32,7 +32,9 @@
     // "noUnusedParameters": true,
     // "noFallthroughCasesInSwitch": true,
     // "noPropertyAccessFromIndexSignature": true,
-
+"module": "ESNext",
+    "moduleResolution": "Bundler", 
+    "noEmit": true,
     // Recommended Options
     "strict": true,
     "jsx": "react-jsx",
@@ -41,6 +43,8 @@
     "noUncheckedSideEffectImports": true,
     "moduleDetection": "force",
     "skipLibCheck": true,
+
+
   },
   "include": ["src"]
 }

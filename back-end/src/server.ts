@@ -1,7 +1,7 @@
 import express from "express";
 import dotenv from 'dotenv'
 import type { Request, Response } from "express";
-import connectDB from "./dbConnection/dbConnection.js";
+import {connectDB} from "./dbConnection/dbConnection.js";
 
 dotenv.config()
 

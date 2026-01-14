@@ -1,7 +1,7 @@
 import express from "express";
 import dotenv from 'dotenv'
-import type { Request, Response } from "express";
-import {connectDB} from "./dbConnection/dbConnection.js";
+import connectDB from "./dbConnection/dbConnection.js";
+import { getAllContacts } from "./controllers/contact.controller.js";
 
 dotenv.config()
 
@@ -13,14 +13,8 @@ app.use(express.json());
 connectDB();
 
 
-app.get("/", (req:Request, res:Response)=>{
-    res.json({
-        name:"Yasir",
-        semester:"6th",
-        gender:"male"
-    })
-})
 
+app.get("/", getAllContacts)
 
 
 app.listen(PORT, ()=>{

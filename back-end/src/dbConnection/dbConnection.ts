@@ -5,7 +5,7 @@ import mongoose from 'mongoose';
 dotenv.config()
 let isConnected = false; // simple flag
 
-export async function connectDB() {
+export default async function connectDB() {
   if (isConnected) return;
 
   try {

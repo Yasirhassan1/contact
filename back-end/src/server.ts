@@ -18,7 +18,7 @@ const PORT = Number(process.env.PORT) ||5000;
 app.post("/create", createContact);
 
 app.get("/", (req:Request, res:Response)=>{
-    res.json({message:"hello"})
+    res.json({message:"ello"})
 });
 
 app.delete("/delete/:id",  deleteContact);

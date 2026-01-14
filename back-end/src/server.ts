@@ -1,7 +1,7 @@
 import express from "express";
 import dotenv from 'dotenv'
 import type { Request, Response } from "express";
-import hello from "./dbConnection/hello.ts";
+import {hello} from "./dbConnection/hello.ts";
 
 dotenv.config()
 

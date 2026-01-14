@@ -1,7 +1,7 @@
 import express from "express";
 import dotenv from 'dotenv'
 import type { Request, Response } from "express";
-import {hello} from "./dbConnection/hello.js";
+import connectDB from "./dbConnection/dbConnection.js";
 
 dotenv.config()
 
@@ -10,8 +10,7 @@ const PORT = Number(process.env.PORT) ||5000;
 app.use(express.json());
 
 
-hello()
-
+connectDB();
 
 
 app.get("/", (req:Request, res:Response)=>{

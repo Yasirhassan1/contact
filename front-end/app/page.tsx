@@ -2,15 +2,9 @@
 
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { Contact } from "./types/types";
 
-type Contact = {
-        id: string,
-        name: string,
-        phoneNo: string,
-        email: string,
-        createdAt?: string;
 
-};
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL as string;
 

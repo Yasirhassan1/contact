@@ -1,5 +1,5 @@
 import { type Request, type Response } from "express";
-import contactModel from "../models/contact.model.ts";
+import contactModel from "../models/contact.model.js";
 
 export const  getAllContacts = async (req:Request, res:Response)=>{
   try{

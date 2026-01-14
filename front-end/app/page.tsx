@@ -33,6 +33,7 @@ function getAllContacts(){
   console.log(err)
  })
 }
+
 function deleteContact(id:string){
   axios.delete(`${apiUrl}/delete/${id}`)
   .then((response)=>{

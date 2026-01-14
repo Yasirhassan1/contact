@@ -1,19 +1,16 @@
 import express from "express";
 import dotenv from 'dotenv'
 import type { Request, Response } from "express";
-import mongoose from "mongoose";
+import connectDB from "./dbConnection/dbConnection.ts";
+
 dotenv.config()
 
 const app = express();
 const PORT = Number(process.env.PORT) ||5000;
 app.use(express.json());
 
-try {
-    await mongoose.connect(process.env.MONGO_URI as string);
-    console.log("MongoDB connected");
-  } catch (err) {
-    console.log("MongoDB connection error:", err);
-  }
+connectDB()
+
 
 
 

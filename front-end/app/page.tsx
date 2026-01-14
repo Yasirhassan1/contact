@@ -19,11 +19,6 @@ async function fetchContacts():Promise<Contact[]>{
   return data.json()
 }
 
-
-
-
-
-
 export default function Page(){
   const [contacts, setContacts]  = useState<Contact[]>([])
   const [showForm, setShowForm] = useState<boolean>(false)
@@ -50,6 +45,7 @@ function deleteContact(id:string){
     console.log(error);
   });
 }
+
 function searchContact(name: string) {
   if(name){
 
@@ -107,7 +103,7 @@ setTimeout(() => {
  searchContact(searchName);
 }, 1000);
 
-}, [searchName])
+}, [searchName]) 
 
 
 function createContact(formData:FormData){
@@ -146,7 +142,7 @@ function setFormData(id:string){
 
   return (
   <div className="p-4 sm:p-6 md:p-8 w-full max-w-4xl mx-auto mt-10 relative">
-    {/* CREATE FORM */}
+    
     {showForm && (
       <>
         <div className="fixed inset-0 bg-black/40 z-10"></div>

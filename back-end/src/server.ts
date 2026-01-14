@@ -3,6 +3,8 @@ import dotenv from 'dotenv'
 import connectDB from "./dbConnection/dbConnection.ts";
 import { createContact, deleteContact, getAllContacts, searchContact, updateContact } from "./controllers/contact.controller.ts";
 import { corsMiddleware } from "./middlewares/cors.middleware.ts";
+import { writeLog } from "./middlewares/log.middleware.ts";
+import { rateLimmiter } from "./middlewares/limmiter.middleware.ts";
 
 dotenv.config()
 
@@ -12,10 +14,14 @@ app.use(corsMiddleware);
 
 app.use(express.json());
 
+app.use(writeLog);
+app.use(rateLimmiter);
+
 
 const PORT = Number(process.env.PORT) ||5000;
 
 connectDB();
+
 
 app.post("/create", createContact);
 

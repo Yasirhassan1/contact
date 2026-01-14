@@ -4,7 +4,7 @@ import contactModel from "../models/contact.model.ts";
 export const  getAllContacts = async (req:Request, res:Response)=>{
   try{
     let contacts = await contactModel.find();
-    res.json(
+    res.status(200).json(
   contacts.map(c => ({
     id: c._id,
     name: c.name,

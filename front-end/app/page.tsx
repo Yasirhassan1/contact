@@ -14,11 +14,6 @@ type Contact = {
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL as string;
 
-async function fetchContacts():Promise<Contact[]>{
-  const data =  await fetch(apiUrl)
-  return data.json()
-}
-
 export default function Page(){
   const [contacts, setContacts]  = useState<Contact[]>([])
   const [showForm, setShowForm] = useState<boolean>(false)
@@ -35,6 +30,15 @@ export default function Page(){
   email: ""
 });
 
+function getAllContacts(){
+  axios.get(`${apiUrl}/`)
+ .then((response)=>{
+  setContacts(response.data)
+ })
+ .catch((err)=>{
+  console.log(err)
+ })
+}
 function deleteContact(id:string){
   axios.delete(`${apiUrl}/delete/${id}`)
   .then((response)=>{
@@ -89,10 +93,7 @@ function updateContact(id:string){
 
 }
 useEffect(()=>{
- async function fett(){
-   setContacts(await fetchContacts())
- }
- fett()
+getAllContacts();
 
 }, [showForm])
 

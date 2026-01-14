@@ -1,14 +1,13 @@
 import express from "express";
 import dotenv from 'dotenv'
-import runAllMiddleware from "./middlewares/all.middleware.ts";
 
 import type { Request, Response } from "express";
 dotenv.config()
 
 const app = express();
 
+app.use(express.json());
 
-runAllMiddleware(app)
 
 const PORT = Number(process.env.PORT) ||5000;
 

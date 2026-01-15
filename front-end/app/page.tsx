@@ -62,15 +62,18 @@ setIsSearched(true)
      
       } else {
         setSearchIds(null);
+        setIsLoading(false)
       }
     })
     .catch((error) => {
       console.log(error);
       setSearchIds(null);
+      setIsLoading(false)
     });
   }
   else if(name ==""){
     setIsSearched(false)
+    setIsLoading(false)
   }
 }
 
@@ -213,7 +216,7 @@ function setFormData(id:string){
             value={form.name}
             onChange={(e) =>{
               setForm({ ...form, name: e.target.value })
-            setIsLoading(true)
+            
             }
             }
             className="border rounded-lg p-3 focus:ring-2 focus:ring-yellow-400 outline-none"
@@ -274,7 +277,9 @@ function setFormData(id:string){
   <input
     type="text"
     placeholder="Search Contact..."
-    onChange={(e) => setSearchName(e.target.value)}
+    onChange={(e) => {setSearchName(e.target.value)
+      setIsLoading(true)
+    }}
     className="w-full border border-gray-200 rounded-lg p-3 mb-6 focus:ring-2 focus:ring-blue-400 outline-none transition"
   />
 

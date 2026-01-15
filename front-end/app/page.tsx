@@ -16,7 +16,7 @@ export default function Page(){
   const [searchName, setSearchName] = useState<string>("")
   const [searchIds, setSearchIds] = useState<string[] | null>([]) 
   const [isSearched, setIsSearched] = useState<boolean>(false)
-  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [isLoading, setIsLoading] = useState<boolean>(true)
 
  const [form, setForm] = useState<Contact>({
   _id: "",
@@ -29,6 +29,7 @@ function getAllContacts(){
   axios.get(`${apiUrl}/`)
  .then((response)=>{
   setContacts(response.data.contacts)
+  setIsLoading(false);
  })
  .catch((err)=>{
   console.log(err)

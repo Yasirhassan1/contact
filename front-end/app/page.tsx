@@ -241,50 +241,47 @@ function setFormData(id:string){
     )}
 
     {/* MAIN CARD */}
-    <div
-      className={`bg-white rounded-2xl shadow-lg p-5 sm:p-6 transition ${
-        showForm || isEdit ? "blur-sm" : ""
-      }`}
-    >
-      <strong className="text-blue-600 text-2xl font-semibold block mb-4">
-        Contact List
-      </strong>
+   <div
+  className={`bg-white rounded-2xl shadow-lg p-5 sm:p-6 transition ${
+    showForm || isEdit ? "blur-sm" : ""
+  }`}
+>
+  <strong className="text-blue-600 text-2xl font-semibold block mb-4">
+    Contact List
+  </strong>
 
-      <input
-        type="text"
-        placeholder="Search Contact..."
-        onChange={(e) => setSearchName(e.target.value)}
-        className="w-full border rounded-lg p-3 mb-4 focus:ring-2 focus:ring-blue-400 outline-none"
-      />
+  <input
+    type="text"
+    placeholder="Search Contact..."
+    onChange={(e) => setSearchName(e.target.value)}
+    className="w-full border border-gray-200 rounded-lg p-3 mb-6 focus:ring-2 focus:ring-blue-400 outline-none transition"
+  />
 
-      <div className="overflow-x-auto">
-        <table className="w-full border-collapse">
-          <thead className="bg-blue-600 text-white">
-            <tr>
-              <th className="p-3 text-left">Name</th>
-              <th className="p-3 text-left">Phone</th>
-              <th className="p-3 text-left">Email</th>
-              <th className="p-3 text-left">Action</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {(isSearched
-              ? contacts?.filter((cur) =>
-                  searchIds?.includes(cur.id)
-                )
-              : contacts
-            )?.map((cur) => (
-              <tr
-                key={cur.id}
-                className="border-b hover:bg-gray-100 transition"
-              >
-                <td className="p-3">{cur.name}</td>
-                <td className="p-3">{cur.phoneNo}</td>
-                <td className="p-3">{cur.email}</td>
-                <td className="p-3 flex gap-2">
+  {/* Scrollable Container */}
+  <div className="overflow-hidden border border-gray-100 rounded-xl">
+    <div className="max-h-80 overflow-y-auto custom-scrollbar">
+      <table className="w-full border-collapse">
+        <thead className="bg-blue-600 text-white sticky top-0 z-10">
+          <tr>
+            <th className="p-4 text-left font-medium">Name</th>
+            <th className="p-4 text-left font-medium">Phone</th>
+            <th className="p-4 text-left font-medium">Email</th>
+            <th className="p-4 text-center font-medium">Action</th>
+          </tr>
+        </thead>
+        <tbody className="divide-y divide-gray-100">
+          {(isSearched
+            ? contacts?.filter((cur) => searchIds?.includes(cur.id))
+            : contacts
+          )?.map((cur) => (
+            <tr key={cur.id} className="hover:bg-blue-50/50 transition">
+              <td className="p-4 text-gray-700">{cur.name}</td>
+              <td className="p-4 text-gray-600">{cur.phoneNo}</td>
+              <td className="p-4 text-gray-600">{cur.email}</td>
+              <td className="p-4">
+                <div className="flex justify-center gap-3">
                   <button
-                    className="px-3 py-1 rounded-md bg-yellow-500 hover:bg-yellow-600 text-white"
+                    className="px-4 py-1.5 rounded-lg bg-amber-100 text-amber-700 hover:bg-amber-200 transition text-sm font-medium"
                     onClick={() => {
                       setIsEdit(true);
                       setEditId(cur.id);
@@ -293,33 +290,31 @@ function setFormData(id:string){
                   >
                     Edit
                   </button>
-
                   <button
-                    className="px-3 py-1 rounded-md bg-red-500 hover:bg-red-600 text-white"
+                    className="px-4 py-1.5 rounded-lg bg-red-100 text-red-700 hover:bg-red-200 transition text-sm font-medium"
                     onClick={() => deleteContact(cur.id)}
                   >
                     Delete
                   </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-
-          <tfoot>
-            <tr>
-              <td colSpan={4} className="pt-4">
-                <button
-                  className="bg-blue-600 hover:bg-blue-700 transition rounded-lg text-white p-3 w-full"
-                  onClick={() => setShowForm(!showForm)}
-                >
-                  Create New Contact
-                </button>
+                </div>
               </td>
             </tr>
-          </tfoot>
-        </table>
-      </div>
+          ))}
+        </tbody>
+      </table>
     </div>
+  </div>
+
+  {/* Footer Button - Outside the scroll area */}
+  <div className="mt-6">
+    <button
+      className="bg-blue-600 hover:bg-blue-700 transition shadow-md hover:shadow-lg rounded-xl text-white font-semibold p-4 w-full flex items-center justify-center gap-2"
+      onClick={() => setShowForm(!showForm)}
+    >
+      <span className="text-xl">+</span> Create New Contact
+    </button>
+  </div>
+</div>
   </div>
 );
 }

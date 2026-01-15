@@ -7,7 +7,7 @@ export const useContact = ()=>{
       const [showForm, setShowForm] = useState<boolean>(false)
       const [isEdit, setIsEdit] = useState<boolean>(false)
       const [editId, setEditId] = useState<string>("")
-      const [searchName, setSearchName] = useState<string>("")
+      const [character, setCharacter] = useState<string>("")
       const [searchIds, setSearchIds] = useState<string[] | null>([]) 
       const [isSearched, setIsSearched] = useState<boolean>(false)
       const [isLoading, setIsLoading] = useState<boolean>(true)
@@ -96,12 +96,16 @@ export const useContact = ()=>{
       
       
       
-      useEffect(()=>{
-      setTimeout(() => {
-       searchContact(searchName);
-      }, 1000);
-      
-      }, [searchName]) 
+useEffect(() => {
+
+  const delayInputTimeoutId = setTimeout(() => {
+        searchContact(character);
+  }, 1000);
+
+  return () => clearTimeout(delayInputTimeoutId);
+  
+}, [character]); 
+
       
       function setFormData(id:string){
         const find  = contacts?.find((cur)=> id === cur._id)
@@ -141,7 +145,7 @@ export const useContact = ()=>{
     showForm, setShowForm,
     setFormData,
     isEdit, setIsEdit,
-    searchName, setSearchName,
+    character, setCharacter,
     editId, setEditId,
     searchIds,
     isSearched,

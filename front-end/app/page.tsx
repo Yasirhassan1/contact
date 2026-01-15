@@ -11,7 +11,7 @@ const {
     showForm, setShowForm,
     isEdit, setIsEdit,
      setFormData,
-     setSearchName,
+     setCharacter,
     editId, setEditId,
     searchIds,
     isSearched,
@@ -158,7 +158,7 @@ const {
   <input
     type="text"
     placeholder="Search Contact..."
-    onChange={(e) => {setSearchName(e.target.value)
+    onChange={(e) => {setCharacter(e.target.value)
       setIsLoading(true)
     }}
     className="w-full border border-gray-200 rounded-lg p-3 mb-6 focus:ring-2 focus:ring-blue-400 outline-none transition"

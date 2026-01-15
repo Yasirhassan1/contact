@@ -1,8 +1,7 @@
 import { type NextFunction, type Request, type Response } from "express"
-import { appendFile } from "node:fs"
-export const  writeLog  = (req:Request, res:Response, next:NextFunction)=>{ 
-    appendFile("log.txt",`IP: ${req.ip} Method: ${req.method} Time: ${String(new Date())}\n`, ()=>{
 
-    })
-    next()
+export const writeLog = (req: Request, res: Response, next: NextFunction) => { 
+    const logEntry = `IP: ${req.ip} | Method: ${req.method} | Path: ${req.url} | Time: ${new Date().toISOString()}`;
+    console.log(logEntry); 
+    next();
 }

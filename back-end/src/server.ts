@@ -1,8 +1,8 @@
 import express from "express";
 import dotenv from 'dotenv'
-import connectDB from "./dbConnection/dbConnection.ts";
-import { getAllContacts, createContact, deleteContact, updateContact, searchContact } from "./controllers/contact.controller.ts";
-import runAllMiddleware from "./middlewares/all.middleware.ts";
+import connectDB from "./dbConnection/dbConnection.js";
+import { getAllContacts, createContact, deleteContact, updateContact, searchContact } from "./controllers/contact.controller.js";
+import runAllMiddleware from "./middlewares/all.middleware.js";
 
 dotenv.config()
 

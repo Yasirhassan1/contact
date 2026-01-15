@@ -3,16 +3,10 @@ import contactModel from "../models/contact.model.js";
 
 export const  getAllContacts = async (req:Request, res:Response)=>{
   try{
-    let contacts = await contactModel.find();
-    res.status(200).json(
-  contacts.map(c => ({
-    id: c._id,
-    name: c.name,
-    phoneNo: c.phoneNo,
-    email: c.email,
-    createdAt: c.createdAt,
-  }))
+    const contacts = await contactModel.find().select(
+  "_id name phoneNo email"
 );
+    res.status(200).json({success:true, contacts})
   }
   catch(err){
     console.log(err)
@@ -33,7 +27,9 @@ await contactModel.create({
   email: email,
 });
 
-let contacts = await contactModel.find()
+  const contacts = await contactModel.find().select(
+  "_id name phoneNo email"
+);
    res.json({
       contacts,
         success:true
@@ -53,7 +49,9 @@ let contacts = await contactModel.find()
 export const deleteContact = async (req:Request, res:Response)=>{
 try{
     await contactModel.findByIdAndDelete(req.params.id);
-    let contacts = await contactModel.find()
+      const contacts = await contactModel.find().select(
+  "_id name phoneNo email"
+);
 
     res.json({contacts, success:true})
 }
@@ -68,15 +66,21 @@ catch(err){
 export const updateContact = async (req:Request, res:Response)=>{
     try{
     const {name, phoneNo, email} = req.body;
-   await contactModel.findByIdAndUpdate(
+  await contactModel.findByIdAndUpdate(
   req.params.id,
   {
     name: name,
     phoneNo: phoneNo,
     email:email
   },
-res.json({success:true})
+
 );
+
+const contacts = await contactModel.find().select(
+  "_id name phoneNo email"
+);
+
+res.json({success:true,  contacts})
     
 }
 catch(err){
@@ -88,7 +92,9 @@ catch(err){
 export const searchContact = async (req: Request, res: Response) => {
   try {
     const character = req.params.character;
-let contacts = await contactModel.find();
+  const contacts = await contactModel.find().select(
+  "_id name phoneNo email"
+);
 
     if (!character) {
       return res.json({ success: false, id: null });

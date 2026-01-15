@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Contact } from "./types/types";
-
+import Loader from "@/app/components/Loader"
 
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL as string;
@@ -16,9 +16,10 @@ export default function Page(){
   const [searchName, setSearchName] = useState<string>("")
   const [searchIds, setSearchIds] = useState<string[] | null>([]) 
   const [isSearched, setIsSearched] = useState<boolean>(false)
+  const [isLoading, setIsLoading] = useState<boolean>(false)
 
  const [form, setForm] = useState<Contact>({
-  id: "",
+  _id: "",
   name: "",
   phoneNo: "",
   email: ""
@@ -27,7 +28,7 @@ export default function Page(){
 function getAllContacts(){
   axios.get(`${apiUrl}/`)
  .then((response)=>{
-  setContacts(response.data)
+  setContacts(response.data.contacts)
  })
  .catch((err)=>{
   console.log(err)
@@ -38,6 +39,7 @@ function deleteContact(id:string){
   axios.delete(`${apiUrl}/delete/${id}`)
   .then((response)=>{
     setContacts(response.data.contacts)
+    setIsLoading(false)
     
   })
    .catch(function (error) {
@@ -56,6 +58,7 @@ setIsSearched(true)
       if (response.data.success) {
       
         setSearchIds(response.data.ids);
+        setIsLoading(false)
      
       } else {
         setSearchIds(null);
@@ -73,13 +76,14 @@ setIsSearched(true)
 
 function updateContact(id:string){
   axios.put(`${apiUrl}/edit/${id}`, {
-    id: form.id,
+    id: form._id,
     name:form.name,
     phoneNo:form.phoneNo,
     email:form.email
   })
   .then((response)=>{
- alert(response.status)
+   setContacts(response.data.contacts)
+   setIsLoading(false)
   })
    .catch(function (error) {
     console.log(error);
@@ -103,6 +107,7 @@ setTimeout(() => {
 
 
 function createContact(formData:FormData){
+  
 const name = formData.get("name")
 const phoneNo = formData.get("phoneNo")
 const email = formData.get("email")
@@ -114,6 +119,7 @@ axios.post(`${apiUrl}/create`, {
   })
   .then(function (response) {
     setContacts(response.data.contacts)
+    setIsLoading(false)
 
   })
   .catch(function (error) {
@@ -126,9 +132,9 @@ setShowForm(false)
 
 
 function setFormData(id:string){
-  const find  = contacts?.find((cur)=> id === cur.id)
+  const find  = contacts?.find((cur)=> id === cur._id)
   setForm({
-    id: id,
+    _id: id,
     name:find?.name as string,
     phoneNo:find?.phoneNo as string,
     email:find?.email as string,
@@ -138,7 +144,10 @@ function setFormData(id:string){
 
   return (
   <div className="p-4 sm:p-6 md:p-8 w-full max-w-4xl mx-auto mt-10 relative">
-    
+     {
+    isLoading && <Loader/>
+          
+}
     {showForm && (
       <>
         <div className="fixed inset-0 bg-black/40 z-10"></div>
@@ -153,26 +162,31 @@ function setFormData(id:string){
 
           <input
             type="text"
+            required
             placeholder="Enter name"
             className="border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-400"
             name="name"
           />
           <input
             type="text"
+            required
             placeholder="Enter Phone No"
             className="border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-400"
             name="phoneNo"
           />
           <input
             type="text"
+            required
             placeholder="Enter Email Address"
             className="border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-400"
             name="email"
           />
 
-          <button className="bg-blue-600 hover:bg-blue-700 transition rounded-lg p-3 text-white">
+          <button className="bg-blue-600 hover:bg-blue-700 transition rounded-lg p-3 text-white" onClick={()=>setIsLoading(true)}>
             Create
           </button>
+         
+
           <button
             type="button"
             className="bg-red-500 hover:bg-red-600 transition rounded-lg p-3 text-white"
@@ -197,8 +211,10 @@ function setFormData(id:string){
           <input
             type="text"
             value={form.name}
-            onChange={(e) =>
+            onChange={(e) =>{
               setForm({ ...form, name: e.target.value })
+            setIsLoading(true)
+            }
             }
             className="border rounded-lg p-3 focus:ring-2 focus:ring-yellow-400 outline-none"
           />
@@ -224,7 +240,12 @@ function setFormData(id:string){
           <button
             type="button"
             className="bg-yellow-500 hover:bg-yellow-600 transition rounded-lg p-3 text-white"
-            onClick={() => updateContact(editId)}
+            onClick={() => {
+              updateContact(editId)
+              setIsEdit(false)
+              setIsLoading(true)
+
+            }}
           >
             Update
           </button>
@@ -271,10 +292,10 @@ function setFormData(id:string){
         </thead>
         <tbody className="divide-y divide-gray-100">
           {(isSearched
-            ? contacts?.filter((cur) => searchIds?.includes(cur.id))
+            ? contacts?.filter((cur) => searchIds?.includes(cur._id))
             : contacts
           )?.map((cur) => (
-            <tr key={cur.id} className="hover:bg-blue-50/50 transition">
+            <tr key={cur._id} className={`hover:bg-blue-50/50 transition`}>
               <td className="p-4 text-gray-700">{cur.name}</td>
               <td className="p-4 text-gray-600">{cur.phoneNo}</td>
               <td className="p-4 text-gray-600">{cur.email}</td>
@@ -284,15 +305,18 @@ function setFormData(id:string){
                     className="px-4 py-1.5 rounded-lg bg-amber-100 text-amber-700 hover:bg-amber-200 transition text-sm font-medium"
                     onClick={() => {
                       setIsEdit(true);
-                      setEditId(cur.id);
-                      setFormData(cur.id);
+                      setEditId(cur._id);
+                      setFormData(cur._id);
                     }}
                   >
                     Edit
                   </button>
                   <button
                     className="px-4 py-1.5 rounded-lg bg-red-100 text-red-700 hover:bg-red-200 transition text-sm font-medium"
-                    onClick={() => deleteContact(cur.id)}
+                    onClick={() =>{ 
+                      deleteContact(cur._id)
+                    setIsLoading(true)
+                    }}
                   >
                     Delete
                   </button>
@@ -309,7 +333,11 @@ function setFormData(id:string){
   <div className="mt-6">
     <button
       className="bg-blue-600 hover:bg-blue-700 transition shadow-md hover:shadow-lg rounded-xl text-white font-semibold p-4 w-full flex items-center justify-center gap-2"
-      onClick={() => setShowForm(!showForm)}
+      onClick={() => {
+        setShowForm(!showForm)
+        
+      }
+      }
     >
       <span className="text-xl">+</span> Create New Contact
     </button>

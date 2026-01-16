@@ -4,3 +4,27 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+
+@keyframes pulse {
+  0% { /* Original size */
+    opacity: 1;
+  }
+  50% {/* Slightly larger */
+    opacity: 0.2;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+/* Apply the animation to the element */
+.pulse-2 {
+  animation-name: pulse;
+  animation-duration: 1s; /* Duration of one cycle */
+  animation-iteration-count: 2; 
+
+
+
+}

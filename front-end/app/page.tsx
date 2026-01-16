@@ -17,6 +17,7 @@ const {
     createContact, 
     updateContact,
     deleteContact,
+    isAdded,
   } = useContact()
 
   return (
@@ -172,8 +173,8 @@ const {
           {(isSearched
             ? contacts?.filter((cur) => searchIds?.includes(cur._id))
             : contacts
-          )?.map((cur) => (
-            <tr key={cur._id} className={`hover:bg-blue-50/50 transition`}>
+          )?.map((cur, ind) => (
+            <tr key={cur._id} className={`hover:bg-blue-50/50 transition ${(ind == 0 && isAdded)? "pulse-2": ""}`}>
               <td className="p-4 text-gray-700">{cur.name}</td>
               <td className="p-4 text-gray-600">{cur.phoneNo}</td>
               <td className="p-4 text-gray-600">{cur.email}</td>

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Contact } from "../types/types";
 import axios from "axios";
 export const useContact = ()=>{
@@ -6,6 +6,7 @@ export const useContact = ()=>{
       const [contacts, setContacts]  = useState<Contact[]>([])
       const [showForm, setShowForm] = useState<boolean>(false)
       const [isEdit, setIsEdit] = useState<boolean>(false)
+      const [isAdded, setIsadded] = useState<boolean>(false)
       const [editId, setEditId] = useState<string>("")
       const [character, setCharacter] = useState<string>("")
       const [searchIds, setSearchIds] = useState<string[] | null>([]) 
@@ -24,6 +25,7 @@ export const useContact = ()=>{
        .then((response)=>{
         setContacts(response.data.contacts?.reverse())
         setIsLoading(false);
+        setIsadded(false)
        })
        .catch((err)=>{
         console.log(err)
@@ -130,8 +132,8 @@ useEffect(() => {
         })
         .then(function (response) {
           setContacts(response.data.contacts.reverse())
+          setIsadded(true)
           setIsLoading(false)
-      
         })
         .catch(function (error) {
           console.log(error);
@@ -154,6 +156,7 @@ useEffect(() => {
     createContact, 
     updateContact,
     deleteContact,
+    isAdded,
     // ... export everything else your UI needs
   };
 }

@@ -1,17 +1,14 @@
 "use client"
 import Loader from "@/app/components/Loader"
-
 import { useContact } from "./hooks/useContact";
 
 export default function Page(){
-
-
 const { 
     contacts,
     showForm, setShowForm,
     isEdit, setIsEdit,
-     setFormData,
-     setCharacter,
+    setFormData,
+    setCharacter,
     editId, setEditId,
     searchIds,
     isSearched,
@@ -20,11 +17,7 @@ const {
     createContact, 
     updateContact,
     deleteContact,
-    
   } = useContact()
-
-
-
 
   return (
   <div className="p-4 sm:p-6 md:p-8 w-full max-w-4xl mx-auto mt-10 relative">
@@ -87,7 +80,7 @@ const {
       <>
         <div className="fixed inset-0 bg-black/40 z-10"></div>
 
-        <form className="fixed z-20 bg-white w-[90%] sm:w-[400px] p-6 rounded-xl shadow-2xl flex flex-col gap-3 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+        <form className="fixed z-20 bg-white w-[90%] sm:w-100 p-6 rounded-xl shadow-2xl flex flex-col gap-3 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
           <h2 className="text-xl font-semibold text-yellow-500 text-center">
             Edit Contact
           </h2>
@@ -128,7 +121,6 @@ const {
               updateContact(editId)
               setIsEdit(false)
               setIsLoading(true)
-
             }}
           >
             Update

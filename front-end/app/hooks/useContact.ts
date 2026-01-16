@@ -22,7 +22,7 @@ export const useContact = ()=>{
       function getAllContacts(){
         axios.get(`${apiUrl}/`)
        .then((response)=>{
-        setContacts(response.data.contacts)
+        setContacts(response.data.contacts?.reverse())
         setIsLoading(false);
        })
        .catch((err)=>{
@@ -33,7 +33,7 @@ export const useContact = ()=>{
       function deleteContact(id:string){
         axios.delete(`${apiUrl}/delete/${id}`)
         .then((response)=>{
-          setContacts(response.data.contacts)
+          setContacts(response.data.contacts.reverse())
           setIsLoading(false)
           
         })
@@ -80,7 +80,7 @@ export const useContact = ()=>{
           email:form.email
         })
         .then((response)=>{
-         setContacts(response.data.contacts)
+         setContacts(response.data.contacts.reverse())
          setIsLoading(false)
         })
          .catch(function (error) {
@@ -129,7 +129,7 @@ useEffect(() => {
           email:email
         })
         .then(function (response) {
-          setContacts(response.data.contacts)
+          setContacts(response.data.contacts.reverse())
           setIsLoading(false)
       
         })

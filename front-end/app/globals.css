@@ -24,7 +24,4 @@ body {
   animation-name: pulse;
   animation-duration: 1s; /* Duration of one cycle */
   animation-iteration-count: 2; 
-
-
-
 }

@@ -56,6 +56,7 @@ export const useContact = ()=>{
             
               setSearchIds(response.data.ids);
               setIsLoading(false)
+              setIsadded(false)
            
             } else {
               setSearchIds(null);
@@ -71,6 +72,7 @@ export const useContact = ()=>{
         else if(name ==""){
           setIsSearched(false)
           setIsLoading(false)
+           setIsadded(false)
         }
       }
       

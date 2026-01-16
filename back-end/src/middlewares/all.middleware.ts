@@ -4,7 +4,7 @@ import { writeLog } from "./log.middleware.js";
 import { rateLimmiter } from "./limmiter.middleware.js";
 import * as helmet from "helmet";
 export default function runAllMiddleware(app:Express){
-    app.use(helmet.default());
+    app.use((helmet as any).default());
     app.use(express.json());
     app.use(corsMiddleware);
     app.use(writeLog);

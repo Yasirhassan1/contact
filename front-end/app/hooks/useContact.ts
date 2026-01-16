@@ -1,8 +1,11 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { Contact } from "../types/types";
 import axios from "axios";
+
 export const useContact = ()=>{
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL as string;
+const apiUrl = process.env.NEXT_PUBLIC_API_URL as string;
+
+
       const [contacts, setContacts]  = useState<Contact[]>([])
       const [showForm, setShowForm] = useState<boolean>(false)
       const [isEdit, setIsEdit] = useState<boolean>(false)
@@ -21,7 +24,12 @@ export const useContact = ()=>{
 
 
       function getAllContacts(){
-        axios.get(`${apiUrl}/`)
+        axios.get(`${apiUrl}/`, {
+          headers:{
+            'api-key': process.env.NEXT_PUBLIC_API_SECRET_KEY as string
+            
+          }
+        })
        .then((response)=>{
         setContacts(response.data.contacts?.reverse())
         setIsLoading(false);

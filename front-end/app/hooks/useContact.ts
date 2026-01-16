@@ -26,7 +26,7 @@ const apiUrl = process.env.NEXT_PUBLIC_API_URL as string;
       function getAllContacts(){
         axios.get(`${apiUrl}/`, {
           headers:{
-            'api-key': process.env.NEXT_PUBLIC_API_SECRET_KEY as string
+            'api-key': process.env.API_SECRET_KEY as string
             
           }
         })

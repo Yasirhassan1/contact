@@ -3,7 +3,7 @@ import { corsMiddleware } from "./cors.middleware.js";
 import { writeLog } from "./log.middleware.js";
 import { rateLimmiter } from "./limmiter.middleware.js";
 import * as helmet from "helmet";
-import { protectApi } from "./protect-api.middleware.ts";
+import { protectApi } from "./protect-api.middleware.js";
 export default function runAllMiddleware(app:Express){
     app.use((helmet as any).default());
     app.use(express.json());

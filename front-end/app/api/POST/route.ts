@@ -3,7 +3,7 @@ import { NextResponse, NextRequest } from 'next/server';
 
 export async function POST(req: NextRequest) {
   try {
-    const apiUrl = process.env.ROOT_URL;
+    const ROOT_URL = process.env.ROOT_URL;
     const secretKey = process.env.API_SECRET_KEY;
 
     // 1. EXTRA STEP: You must read the data sent from your frontend
@@ -11,7 +11,7 @@ export async function POST(req: NextRequest) {
 
     // 2. CORRECT AXIOS CALL:
     // axios.post(URL, DATA, CONFIG)
-    const response = await axios.post(`${apiUrl}/create`, body, {
+    const response = await axios.post(`${ROOT_URL}/create`, body, {
       headers: {
         'api-key': secretKey as string,
       },

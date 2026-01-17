@@ -3,9 +3,6 @@ import { Contact } from "../types/types";
 import axios from "axios";
 
 export const useContact = ()=>{
-const apiUrl = process.env.NEXT_PUBLIC_API_URL as string;
-
-
       const [contacts, setContacts]  = useState<Contact[]>([])
       const [showForm, setShowForm] = useState<boolean>(false)
       const [isEdit, setIsEdit] = useState<boolean>(false)

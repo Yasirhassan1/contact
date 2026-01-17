@@ -3,7 +3,7 @@ import axios from "axios";
 
 export async function DELETE(req: NextRequest) {
   try {
-    const apiUrl = process.env.ROOT_URl;
+    const ROOT_URL = process.env.ROOT_URl;
     const secretKey = process.env.API_SECRET_KEY;
 
     // 1. Get the ID sent from your frontend
@@ -12,7 +12,7 @@ export async function DELETE(req: NextRequest) {
 
     // 2. Call your REAL backend
     // Format: axios.delete(URL, CONFIG)
-    const response = await axios.delete(`${apiUrl}/delete/${id}`, {
+    const response = await axios.delete(`${ROOT_URL}/delete/${id}`, {
       headers: {
         'api-key': secretKey as string,
       },

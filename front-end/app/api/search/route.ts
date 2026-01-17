@@ -3,7 +3,7 @@ import { NextResponse, NextRequest } from 'next/server';
 
 export async function GET(req: NextRequest) {
   try {
-    const apiUrl = process.env.ROOT_URL;
+    const ROOT_URL = process.env.ROOT_URL;
     const secretKey = process.env.API_SECRET_KEY;
 
     // 1. Get the name from the URL Query string (?name=...)
@@ -16,7 +16,7 @@ export async function GET(req: NextRequest) {
 
     // 2. Forward to Express (Check if your Express route is GET or POST)
     // Assuming your Express backend is: GET /search/:name
-    const response = await axios.get(`${apiUrl}/search/${name}`, {
+    const response = await axios.get(`${ROOT_URL}/search/${name}`, {
       headers: {
         'api-key': secretKey as string,
       },

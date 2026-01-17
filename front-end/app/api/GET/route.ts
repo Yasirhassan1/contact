@@ -4,11 +4,11 @@ import { NextResponse } from 'next/server';
 export async function GET() {
   try {
     // 1. Get your private variables (Server-side can see both)
-    const apiUrl = process.env.ROOT_URL;
+    const ROOT_URL = process.env.ROOT_URL;
     const secretKey = process.env.API_SECRET_KEY; 
 
     // 2. Wait for the backend response
-    const response = await axios.get(`${apiUrl}/`, {
+    const response = await axios.get(`${ROOT_URL}/`, {
       headers: {
         'api-key': secretKey as string, // Your secret is safe here!
       },

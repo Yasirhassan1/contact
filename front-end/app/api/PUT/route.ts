@@ -3,7 +3,7 @@ import { NextResponse, NextRequest } from 'next/server';
 
 export async function PUT(req: NextRequest) {
   try {
-    const apiUrl = process.env.ROOT_URL;
+    const ROOT_URL = process.env.ROOT_URL;
     const secretKey = process.env.API_SECRET_KEY;
 
     // 1. Get the data from the frontend
@@ -12,7 +12,7 @@ export async function PUT(req: NextRequest) {
 
     // 2. Forward to Express using PUT
     // axios.put(URL, DATA, CONFIG)
-    const response = await axios.put(`${apiUrl}/edit/${id}`, 
+    const response = await axios.put(`${ROOT_URL}/edit/${id}`, 
       { name, phoneNo, email }, // This is the payload Express will see as req.body
       {
         headers: {

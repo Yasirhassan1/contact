@@ -23,4 +23,6 @@ Express.jsDatabaseMongoDB (via Mongoose)DeploymentVercel (Frontend & Backend)Sec
 with the following keys:Backend:PORT, MONGO_URI, API_SECRET_KEY, FRONTEND_URLFrontend:NEXT_PUBLIC_API_URL, API_SECRET_KEY (Private)
 
 📈 Optimization
-Debouncing: Implemented on the search input to reduce server load by preventing an API call on every single keystroke.Next.js Image/Font Optimization: Used for high Core Web Vitals scores.5
+Debouncing: Implemented on the search input to reduce server load by preventing an API call on every single keystroke.Next.js Image/Font Optimization: Used for high Core Web Vitals scores
+
+Live demo URL: https://contact-3k4v.vercel.app/

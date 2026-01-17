@@ -1,36 +1,14 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+Contact Management System (Secure Full-Stack CRUD)A robust, full-stack application for managing contacts, built with a focus on security, performance, and scalable architecture. 
+This project demonstrates a secure communication bridge between a Next.js frontend and an Express.js backend. Key FeaturesFull CRUD Functionality: Create, Read, Update, and Delete contacts.1Real-time Search: Integrated with Debouncing to optimize API calls and enhance UX.Server-Side Proxy: All API requests are proxied through Next.js Route Handlers to keep the backend infrastructure invisible to the client.Responsive Design: Fully deployed and optimized for all device sizes.
 
-## Getting Started
+🛡️ Security ArchitectureThis application implements "Defense in Depth" to ensure data integrity and prevent unauthorized access.
+1. Architectural Protection (The Proxy)Instead of the browser communicating directly with the Express API, it talks to a Next.js Server-Side Route.
+2. Benefit: The Backend URL is never exposed in the browser's Network tab.Benefit: Protects against direct URL manipulation.
+3. Header-Based AuthenticationA custom API Protector Middleware ensures that only our authorized frontend can communicate with the backend.Requests must carry a secret x-api-key in the header.Unauthorized direct access returns a 403 Forbidden status.
+4. 3. Production-Grade MiddlewaresHelmet.js: Sets various HTTP headers to protect against XSS, Clickjacking, and other common vulnerabilities.3CORS: Strict "Origin" filtering to ensure only the deployed frontend can request data.Express Rate Limit: Prevents DDoS attacks and brute-force attempts by limiting requests per window of time.4Data Sanitization: Ensures incoming JSON payloads are safe and formatted.
 
-First, run the development server:
+🛠️ Tech StackComponentTechnologyFrontendNext.js (App Router), Axios, ReactBackendNode.js, Express.jsDatabaseMongoDB (via Mongoose)DeploymentVercel (Frontend & Backend)SecurityHelmet, CORS, Rate-Limit, API-Key Auth
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+⚙️ Environment VariablesTo run this project locally, you must create a .env file in both the frontend and backend folders with the following keys:Backend:PORT, MONGO_URI, API_SECRET_KEY, FRONTEND_URLFrontend:NEXT_PUBLIC_API_URL, API_SECRET_KEY (Private)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+📈 OptimizationDebouncing: Implemented on the search input to reduce server load by preventing an API call on every single keystroke.Next.js Image/Font Optimization: Used for high Core Web Vitals scores.5

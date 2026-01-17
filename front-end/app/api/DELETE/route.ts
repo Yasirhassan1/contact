@@ -12,7 +12,7 @@ export async function DELETE(req: NextRequest) {
 
     // 2. Call your REAL backend
     // Format: axios.delete(URL, CONFIG)
-    const response = await axios.delete(`${ROOT_URL}/delete/${id}`, {
+    const response = await axios.delete(`${ROOT_URL}/delete/${id as string}`, {
       headers: {
         'api-key': secretKey as string,
       },

@@ -24,14 +24,10 @@ const apiUrl = process.env.NEXT_PUBLIC_API_URL as string;
 
 
       function getAllContacts(){
-        axios.get(`${apiUrl}/`, {
-          headers:{
-            'api-key': process.env.API_SECRET_KEY as string
-            
-          }
-        })
+        axios.get(`/api/GET`)
        .then((response)=>{
-        setContacts(response.data.contacts?.reverse())
+       
+        setContacts(response.data)
         setIsLoading(false);
         setIsadded(false)
        })
@@ -40,67 +36,77 @@ const apiUrl = process.env.NEXT_PUBLIC_API_URL as string;
        })
       }
       
-      function deleteContact(id:string){
-        axios.delete(`${apiUrl}/delete/${id}`)
-        .then((response)=>{
-          setContacts(response.data.contacts.reverse())
-          setIsLoading(false)
-          
-        })
-         .catch(function (error) {
-          console.log(error);
-        });
-      }
+     function deleteContact(id: string) {
+  setIsLoading(true);
+
+  // We call our internal Next.js proxy
+  // Note: axios.delete requires the body to be under the 'data' key
+  axios.delete(`/api/DELETE`, { 
+    data: { id: id } 
+  })
+  .then((response) => {
+    // response.data is the array returned from NextResponse.json(contacts)
+    setContacts(response.data); 
+    setIsLoading(false);
+  })
+  .catch((error) => {
+    console.error("Delete Error:", error);
+    setIsLoading(false);
+  });
+}
       
-      function searchContact(name: string) {
-        if(name){
-      
-      setIsSearched(true)
-        axios
-          .get(`${apiUrl}/search/${name}`)
-          .then((response) => {
-            
-            if (response.data.success) {
-            
-              setSearchIds(response.data.ids);
-              setIsLoading(false)
-              setIsadded(false)
-           
-            } else {
-              setSearchIds(null);
-              setIsLoading(false)
-            }
-          })
-          .catch((error) => {
-            console.log(error);
-            setSearchIds(null);
-            setIsLoading(false)
-          });
+   function searchContact(name: string) {
+  if (name) {
+    setIsSearched(true);
+    setIsLoading(true);
+
+    // Use params: { name } to send it as /api/search?name=...
+    axios.get(`/api/search`, {
+        params: { name: name } 
+      })
+      .then((response) => {
+        if (response.data.success) {
+          setSearchIds(response.data.ids);
+        } else {
+          setSearchIds(null);
         }
-        else if(name ==""){
-          setIsSearched(false)
-          setIsLoading(false)
-           setIsadded(false)
-        }
-      }
+        setIsLoading(false);
+        setIsadded(false);
+      })
+      .catch((error) => {
+        console.error("Search Error:", error);
+        setSearchIds(null);
+        setIsLoading(false);
+      });
+  } else {
+    setIsSearched(false);
+    setIsLoading(false);
+    setIsadded(false);
+  }
+}
       
-      function updateContact(id:string){
-        axios.put(`${apiUrl}/edit/${id}`, {
-          id: form._id,
-          name:form.name,
-          phoneNo:form.phoneNo,
-          email:form.email
-        })
-        .then((response)=>{
-         setContacts(response.data.contacts.reverse())
-         setIsLoading(false)
-        })
-         .catch(function (error) {
-          console.log(error);
-        });
-      
-      
-      }
+     function updateContact(id: string) {
+  setIsLoading(true);
+
+  // Send the updated form data directly
+  // 'form' should contain the name, phoneNo, and email
+  axios.put(`/api/PUT`, {
+      id: id,
+      name: form.name,
+      phoneNo: form.phoneNo,
+      email: form.email
+    })
+    .then((response) => {
+      // response.data is the array returned from your Next.js proxy
+      setContacts(response.data);
+      setIsLoading(false);
+      setShowForm(false); // Close the edit form
+    })
+    .catch((error) => {
+      console.error("Update Error:", error);
+      setIsLoading(false);
+    });
+}
       useEffect(()=>{
       getAllContacts();
       
@@ -135,13 +141,13 @@ useEffect(() => {
       const phoneNo = formData.get("phoneNo")
       const email = formData.get("email")
       
-      axios.post(`${apiUrl}/create`, {
+      axios.post(`/api/POST`, {
           name: name,
           phoneNo: phoneNo,
           email:email
         })
         .then(function (response) {
-          setContacts(response.data.contacts.reverse())
+          setContacts(response.data)
           setIsadded(true)
           setIsLoading(false)
         })

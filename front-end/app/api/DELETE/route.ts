@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import axios from "axios";
 
-export async function remove(req: NextRequest) {
+export async function DELETE(req: NextRequest) {
   try {
-    const ROOT_URL = process.env.ROOT_URl;
+    const ROOT_URL = process.env.ROOT_URL;
     const secretKey = process.env.API_SECRET_KEY;
 
     // 1. Get the ID sent from your frontend

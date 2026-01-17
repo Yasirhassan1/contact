@@ -37,9 +37,7 @@ export const useContact = ()=>{
   setIsLoading(true);
   if (!id) return console.error("No ID provided to delete function!");
 
-  // We call our internal Next.js proxy
-  // Note: axios.delete requires the body to be under the 'data' key
-  axios.delete(`/api/remove`, { 
+  axios.delete(`/api/DELETE`, { 
     data: { id: id } 
   })
   .then((response) => {

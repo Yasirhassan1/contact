@@ -39,7 +39,7 @@ export const useContact = ()=>{
 
   // We call our internal Next.js proxy
   // Note: axios.delete requires the body to be under the 'data' key
-  axios.delete(`/api/delete`, { 
+  axios.delete(`/api/remove`, { 
     data: { id: id } 
   })
   .then((response) => {

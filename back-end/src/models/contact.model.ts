@@ -27,7 +27,7 @@ const ContactSchema = new Schema<IContact>(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 export default mongoose.models.Contact ||

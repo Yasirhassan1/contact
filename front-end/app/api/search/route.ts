@@ -1,5 +1,5 @@
-import axios from 'axios';
-import { NextResponse, NextRequest } from 'next/server';
+import axios from "axios";
+import { NextResponse, NextRequest } from "next/server";
 
 export async function GET(req: NextRequest) {
   try {
@@ -8,7 +8,7 @@ export async function GET(req: NextRequest) {
 
     // 1. Get the name from the URL Query string (?name=...)
     const { searchParams } = new URL(req.url);
-    const name = searchParams.get('name');
+    const name = searchParams.get("name");
 
     if (!name) {
       return NextResponse.json({ ids: [] });
@@ -18,16 +18,15 @@ export async function GET(req: NextRequest) {
     // Assuming your Express backend is: GET /search/:name
     const response = await axios.get(`${ROOT_URL}/search/${name}`, {
       headers: {
-        'api-key': secretKey as string,
+        "api-key": secretKey as string,
       },
     });
 
     // 3. Return the IDs to the frontend
-    return NextResponse.json({ 
-      success: true, 
-      ids: response.data.ids 
+    return NextResponse.json({
+      success: true,
+      ids: response.data.ids,
     });
-
   } catch (err: unknown) {
     console.error("Search Proxy Error:", err);
     return NextResponse.json({ success: false, ids: [] }, { status: 500 });

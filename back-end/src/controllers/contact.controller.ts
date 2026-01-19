@@ -3,6 +3,7 @@ import contactModel from "../models/contact.model.js";
 import userModel from "../models/user.model.js";
 import jwt from 'jsonwebtoken';
 import type AuthRequest from "../middlewares/verify-token.middleware.js";
+
 export const getAllContacts = async (req: AuthRequest, res: Response) => {
   try {
     // 1. Get the userId from the 'req.user' object attached by your middleware

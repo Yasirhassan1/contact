@@ -1,3 +1,4 @@
+"use client"
 import { useState, useEffect } from "react";
 import { Contact } from "../types/types";
 import axios from "axios";
@@ -13,8 +14,13 @@ export const useContact = () => {
   const [isSearched, setIsSearched] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const NEXT_PUBLIC_ROOT_URL = process.env.NEXT_PUBLIC_ROOT_URL;
-const token = localStorage.getItem("userToken");
+   const [token, setToken] = useState<string | null>("")
 
+
+useEffect(()=>{
+  setToken(localStorage.getItem("userToken"))
+
+},[])
   const [form, setForm] = useState<Contact>({
     _id: "",
     name: "",

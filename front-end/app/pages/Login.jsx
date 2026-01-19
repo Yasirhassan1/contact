@@ -3,25 +3,36 @@ import { useState } from "react";
 
 export default function Login() {
   const [isSignUp, setIsSignUp] = useState(false);
-
+  const NEXT_PUBLIC_ROOT_URL = process.env.NEXT_PUBLIC_ROOT_URL;
+ 
   function checkUserAction(formData) {
     let email = formData.get("email");
     let password = formData.get("password");
-
     if (isSignUp) {
       axios
-        .post("/api/sign-up", {
+        .post(`${NEXT_PUBLIC_ROOT_URL}/sign-up`, {
           email: email,
           password: password,
         })
         .then((Response) => {
-          localStorage.setItem("token", Response.data.token);
+          alert(Response.data.success)
+          localStorage.setItem("userToken", Response.data.token)
         })
         .catch((err) => {
           console.log(err);
         });
-    } else {
-      alert("user want to log in");
+    }
+     else {
+     axios.post(`${NEXT_PUBLIC_ROOT_URL}/sign-in`, {
+      email:email,
+      password:password
+     }).then((Response)=>{
+        alert(Response.data.success)
+       localStorage.setItem("userToken", Response.data.token)
+     })
+     .catch((err)=>{
+      console.log(err)
+     })
     }
   }
   return (

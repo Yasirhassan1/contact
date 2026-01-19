@@ -4,7 +4,9 @@ export interface IContact extends Document {
   name: string;
   phoneNo: string;
   email: string;
+  owner: mongoose.Types.ObjectId,
   createdAt: Date;
+
 }
 
 const ContactSchema = new Schema<IContact>(
@@ -24,6 +26,12 @@ const ContactSchema = new Schema<IContact>(
       lowercase: true,
       trim: true,
     },
+    owner:{
+      type:mongoose.Types.ObjectId,
+      required:true,
+      ref:"User",
+    }
+
   },
   {
     timestamps: true,

@@ -12,6 +12,9 @@ export const useContact = () => {
   const [searchIds, setSearchIds] = useState<string[] | null>([]);
   const [isSearched, setIsSearched] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const NEXT_PUBLIC_ROOT_URL = process.env.NEXT_PUBLIC_ROOT_URL;
+const token = localStorage.getItem("userToken");
+
   const [form, setForm] = useState<Contact>({
     _id: "",
     name: "",
@@ -20,10 +23,15 @@ export const useContact = () => {
   });
 
   function getAllContacts() {
+    
     axios
-      .get(`/api/GET`)
+      .get(`${NEXT_PUBLIC_ROOT_URL}/`,{
+        headers: {
+      Authorization: `Bearer ${token}` 
+    }
+      })
       .then((response) => {
-        setContacts(response.data);
+        setContacts(response.data.contacts.reverse());
         setIsLoading(false);
         setIsadded(false);
       })
@@ -37,12 +45,17 @@ export const useContact = () => {
     if (!id) return console.error("No ID provided to delete function!");
 
     axios
-      .delete(`/api/DELETE`, {
-        data: { id: id },
-      })
+      .delete(`${NEXT_PUBLIC_ROOT_URL}/delete/${id}`,
+        {
+        headers: {
+      Authorization: `Bearer ${token}` 
+    }
+      }
+        
+      )
       .then((response) => {
         // response.data is the array returned from NextResponse.json(contacts)
-        setContacts(response.data);
+        setContacts(response.data.contacts.reverse());
         setIsLoading(false);
       })
       .catch((error) => {
@@ -58,9 +71,13 @@ export const useContact = () => {
 
       // Use params: { name } to send it as /api/search?name=...
       axios
-        .get(`/api/search`, {
-          params: { name: name },
-        })
+        .get(`${NEXT_PUBLIC_ROOT_URL}/search/${name}`,
+             {
+        headers: {
+      Authorization: `Bearer ${token}` 
+    }
+      }
+        )
         .then((response) => {
           if (response.data.success) {
             setSearchIds(response.data.ids);
@@ -88,15 +105,19 @@ export const useContact = () => {
     // Send the updated form data directly
     // 'form' should contain the name, phoneNo, and email
     axios
-      .put(`/api/PUT`, {
-        id: id,
+      .put(`${NEXT_PUBLIC_ROOT_URL}/edit/${id}`, {
         name: form.name,
         phoneNo: form.phoneNo,
         email: form.email,
+      },
+       {
+        headers: {
+      Authorization: `Bearer ${token}` 
+    }
       })
       .then((response) => {
         // response.data is the array returned from your Next.js proxy
-        setContacts(response.data);
+        setContacts(response.data.contacts.reverse());
         setIsLoading(false);
         setShowForm(false); // Close the edit form
       })
@@ -132,13 +153,18 @@ export const useContact = () => {
     const email = formData.get("email");
 
     axios
-      .post(`/api/POST`, {
+      .post(`${NEXT_PUBLIC_ROOT_URL}/create`, {
         name: name,
         phoneNo: phoneNo,
         email: email,
+      },
+       {
+        headers: {
+      Authorization: `Bearer ${token}` 
+    }
       })
       .then(function (response) {
-        setContacts(response.data);
+        setContacts(response.data.contacts.reverse());
         setIsadded(true);
         setIsLoading(false);
       })

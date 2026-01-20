@@ -27,7 +27,7 @@ const ContactSchema = new Schema<IContact>(
       trim: true,
     },
     owner:{
-      type:mongoose.Types.ObjectId,
+      type:mongoose.Schema.Types.ObjectId,
       required:true,
       ref:"User",
     }

@@ -81,9 +81,9 @@ export const deleteContact = async (req: AuthRequest, res: Response) => {
   try {
     // 1. Delete ONLY if the ID matches AND the owner matches
     const deletedContact = await contactModel.findOneAndDelete({
-      _id: contactId as any,
+      _id: contactId,
       owner: userId,
-    });
+    } as any);
 
     if (!deletedContact) {
       return res.status(404).json({

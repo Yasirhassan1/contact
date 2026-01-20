@@ -1,10 +1,10 @@
 import axios from "axios";
 import { useState } from "react";
 
-export default function Login() {
+export default function Login({ setIsLog }) {
   const [isSignUp, setIsSignUp] = useState(false);
   const NEXT_PUBLIC_ROOT_URL = process.env.NEXT_PUBLIC_ROOT_URL;
- 
+
   function checkUserAction(formData) {
     let email = formData.get("email");
     let password = formData.get("password");
@@ -15,24 +15,26 @@ export default function Login() {
           password: password,
         })
         .then((Response) => {
-          alert(Response.data.success)
-          localStorage.setItem("userToken", Response.data.token)
+          alert(Response.data.success);
+          localStorage.setItem("userToken", Response.data.token);
         })
         .catch((err) => {
           console.log(err);
         });
-    }
-     else {
-     axios.post(`${NEXT_PUBLIC_ROOT_URL}/sign-in`, {
-      email:email,
-      password:password
-     }).then((Response)=>{
-        alert(Response.data.success)
-       localStorage.setItem("userToken", Response.data.token)
-     })
-     .catch((err)=>{
-      console.log(err)
-     })
+    } else {
+      axios
+        .post(`${NEXT_PUBLIC_ROOT_URL}/sign-in`, {
+          email: email,
+          password: password,
+        })
+        .then((Response) => {
+          localStorage.setItem("userToken", Response.data.token);
+
+          setIsLog(!!localStorage.getItem("userToken"));
+        })
+        .catch((err) => {
+          console.log("Session expire");
+        });
     }
   }
   return (

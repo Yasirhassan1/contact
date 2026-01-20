@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { useState, useEffect } from "react";
 import { Contact } from "../types/types";
 import axios from "axios";
@@ -13,35 +13,36 @@ export const useContact = () => {
   const [searchIds, setSearchIds] = useState<string[] | null>([]);
   const [isSearched, setIsSearched] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isLog, setIsLog] = useState<boolean>(
+    !!localStorage.getItem("userToken"),
+  );
   const NEXT_PUBLIC_ROOT_URL = process.env.NEXT_PUBLIC_ROOT_URL;
-   const [token, setToken] = useState<string | null>("")
 
-
-useEffect(()=>{
-  setToken(localStorage.getItem("userToken"))
-
-},[])
   const [form, setForm] = useState<Contact>({
     _id: "",
     name: "",
     phoneNo: "",
     email: "",
   });
+  const token = localStorage.getItem("userToken");
 
   function getAllContacts() {
-    
     axios
-      .get(`${NEXT_PUBLIC_ROOT_URL}/`,{
+      .get(`${NEXT_PUBLIC_ROOT_URL}/`, {
         headers: {
-      Authorization: `Bearer ${token}` 
-    }
+          Authorization: `Bearer ${token}`,
+        },
       })
-      .then((response) => {
-        setContacts(response.data.contacts.reverse());
+      .then((Response) => {
+        setContacts(Response.data.contacts.reverse());
         setIsLoading(false);
         setIsadded(false);
       })
       .catch((err) => {
+        if (err.status == 401) {
+          localStorage.removeItem("userToken");
+          setIsLog(!!localStorage.getItem("userToken"));
+        }
         console.log(err);
       });
   }
@@ -51,20 +52,21 @@ useEffect(()=>{
     if (!id) return console.error("No ID provided to delete function!");
 
     axios
-      .delete(`${NEXT_PUBLIC_ROOT_URL}/delete/${id}`,
-        {
+      .delete(`${NEXT_PUBLIC_ROOT_URL}/delete/${id}`, {
         headers: {
-      Authorization: `Bearer ${token}` 
-    }
-      }
-        
-      )
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((response) => {
         // response.data is the array returned from NextResponse.json(contacts)
         setContacts(response.data.contacts.reverse());
         setIsLoading(false);
       })
       .catch((error) => {
+        if (error.status == 401) {
+          localStorage.removeItem("userToken");
+          setIsLog(!!localStorage.getItem("userToken"));
+        }
         console.error("Delete Error:", error);
         setIsLoading(false);
       });
@@ -77,13 +79,11 @@ useEffect(()=>{
 
       // Use params: { name } to send it as /api/search?name=...
       axios
-        .get(`${NEXT_PUBLIC_ROOT_URL}/search/${name}`,
-             {
-        headers: {
-      Authorization: `Bearer ${token}` 
-    }
-      }
-        )
+        .get(`${NEXT_PUBLIC_ROOT_URL}/search/${name}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
         .then((response) => {
           if (response.data.success) {
             setSearchIds(response.data.ids);
@@ -97,6 +97,10 @@ useEffect(()=>{
           console.error("Search Error:", error);
           setSearchIds(null);
           setIsLoading(false);
+          if (error.status == 401) {
+            localStorage.removeItem("userToken");
+            setIsLog(!!localStorage.getItem("userToken"));
+          }
         });
     } else {
       setIsSearched(false);
@@ -111,16 +115,19 @@ useEffect(()=>{
     // Send the updated form data directly
     // 'form' should contain the name, phoneNo, and email
     axios
-      .put(`${NEXT_PUBLIC_ROOT_URL}/edit/${id}`, {
-        name: form.name,
-        phoneNo: form.phoneNo,
-        email: form.email,
-      },
-       {
-        headers: {
-      Authorization: `Bearer ${token}` 
-    }
-      })
+      .put(
+        `${NEXT_PUBLIC_ROOT_URL}/edit/${id}`,
+        {
+          name: form.name,
+          phoneNo: form.phoneNo,
+          email: form.email,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      )
       .then((response) => {
         // response.data is the array returned from your Next.js proxy
         setContacts(response.data.contacts.reverse());
@@ -128,13 +135,19 @@ useEffect(()=>{
         setShowForm(false); // Close the edit form
       })
       .catch((error) => {
+        if (error.status == 401) {
+          localStorage.removeItem("userToken");
+          setIsLog(!!localStorage.getItem("userToken"));
+        }
         console.error("Update Error:", error);
         setIsLoading(false);
       });
   }
   useEffect(() => {
-    getAllContacts();
-  }, [showForm]);
+    if (isLog) {
+      getAllContacts();
+    }
+  }, [showForm, isLog]);
 
   useEffect(() => {
     const delayInputTimeoutId = setTimeout(() => {
@@ -159,16 +172,19 @@ useEffect(()=>{
     const email = formData.get("email");
 
     axios
-      .post(`${NEXT_PUBLIC_ROOT_URL}/create`, {
-        name: name,
-        phoneNo: phoneNo,
-        email: email,
-      },
-       {
-        headers: {
-      Authorization: `Bearer ${token}` 
-    }
-      })
+      .post(
+        `${NEXT_PUBLIC_ROOT_URL}/create`,
+        {
+          name: name,
+          phoneNo: phoneNo,
+          email: email,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      )
       .then(function (response) {
         setContacts(response.data.contacts.reverse());
         setIsadded(true);
@@ -176,6 +192,10 @@ useEffect(()=>{
       })
       .catch(function (error) {
         console.log(error);
+        if (error.status == 401) {
+          localStorage.removeItem("userToken");
+          setIsLog(!!localStorage.getItem("userToken"));
+        }
       });
 
     setShowForm(false);
@@ -202,6 +222,8 @@ useEffect(()=>{
     updateContact,
     deleteContact,
     isAdded,
+    isLog,
+    setIsLog,
     // ... export everything else your UI needs
   };
 };

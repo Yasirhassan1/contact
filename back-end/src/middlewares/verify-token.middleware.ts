@@ -18,7 +18,7 @@ export const verifyToken = (req:AuthRequest, res:Response, next:NextFunction)=>{
     next(); // Move to the actual route logic
   } catch(error){
      console.log(error)
-    return res.status(401).json({ message: `Invalid or Expired Token` });
+    return res.status(401).json({ success:false, message: `Invalid or Expired Token` });
    
   }
     

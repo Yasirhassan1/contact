@@ -31,8 +31,6 @@ export default function Login({ setIsLog }) {
         .then((Response) => {
           writeTokenToLocalStorage(Response.data.token)
           alert("login successfull")
-          // localStorage.setItem("userToken", Response.data.token);
-
           setIsLog(isTokenAvalable);
         })
         .catch((err) => {

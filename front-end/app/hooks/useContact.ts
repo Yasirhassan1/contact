@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { Contact } from "../types/types";
 import axios from "axios";
-import { isTokenAvalable, removeToken } from "../api/api";
+import { getToken, isTokenAvalable, removeToken } from "../api/api";
 
 export const useContact = () => {
   const [contacts, setContacts] = useState<Contact[]>([]);
@@ -23,7 +23,7 @@ export const useContact = () => {
     phoneNo: "",
     email: "",
   });
-  const token = localStorage.getItem("userToken");
+  const token = getToken()
 
   function getAllContacts() {
     axios

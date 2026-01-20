@@ -5,6 +5,12 @@ export const isTokenAvalable = () => {
   return null;
 };
 
+export const getToken = ()=>{
+    if (typeof globalThis.window !== "undefined") {
+    return localStorage.getItem("userToken");
+  }
+}
+
 
 export const writeTokenToLocalStorage = (token:string)=>{
   if (typeof globalThis !== "undefined") {

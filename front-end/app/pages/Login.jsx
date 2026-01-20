@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useState } from "react";
-import { isTokenAvalable, writeTokenToLocalStorage } from "../api/api";
+import { isTokenAvalable, writeTokenToLocalStorage } from "../utility/local-storage";
 
 export default function Login({ setIsLog }) {
   const [isSignUp, setIsSignUp] = useState(false);

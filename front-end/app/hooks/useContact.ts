@@ -2,8 +2,7 @@
 import { useState, useEffect } from "react";
 import { Contact } from "../types/types";
 import axios from "axios";
-import { getToken, isTokenAvalable, removeToken } from "../api/api";
-
+import { getToken, isTokenAvalable, removeToken } from "../utility/local-storage";
 export const useContact = () => {
   const [contacts, setContacts] = useState<Contact[]>([]);
   const [showForm, setShowForm] = useState<boolean>(false);

@@ -1,7 +1,8 @@
 import express from "express";
 import dotenv from 'dotenv'
 import connectDB from "./dbConnection/dbConnection.js";
-import { getAllContacts, createContact, deleteContact, updateContact, searchContact, signUp, signIn } from "./controllers/contact.controller.js";
+import { getAllContacts, createContact, deleteContact, updateContact, searchContact } from "./controllers/contact.controller.js";
+import { signUp, signIn } from "./controllers/auth.controller.ts";
 import runAllMiddleware from "./middlewares/all.middleware.js";
 import { verifyToken } from "./middlewares/verify-token.middleware.js";
 

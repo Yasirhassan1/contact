@@ -21,7 +21,7 @@ export const signUp = async (req: Request, res: Response) => {
 
       const JWT_SECRET = process.env.JWT_SECRET as string;
       const token = jwt.sign({ userId: newUser._id }, JWT_SECRET, {
-        expiresIn: "1m",
+        expiresIn: "10m",
       });
 
       res.status(200).json({
@@ -70,7 +70,7 @@ export const signIn = async (req: Request, res: Response) => {
     }
 
     const token = jwt.sign({ userId: user._id }, JWT_SECRET, {
-      expiresIn: "1m",
+      expiresIn: "10m",
     });
 
     return res.json({

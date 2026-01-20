@@ -81,7 +81,7 @@ export const deleteContact = async (req: AuthRequest, res: Response) => {
   try {
     // 1. Delete ONLY if the ID matches AND the owner matches
     const deletedContact = await contactModel.findOneAndDelete({
-      _id: contactId,
+      _id: contactId as any,
       owner: userId,
     });
 
@@ -123,7 +123,7 @@ export const updateContact = async (req: AuthRequest, res: Response) => {
 
     // 1. Update ONLY if ID matches AND the owner matches
     const updatedContact = await contactModel.findOneAndUpdate(
-      { _id: contactId, owner: userId }, // The Filter
+      { _id: contactId, owner: userId } as any, // The Filter
       { name, phoneNo, email }, // The Data to update
       { new: true }, // Options: return the modified document
     );
@@ -193,7 +193,7 @@ export const signUp = async (req: Request, res: Response) => {
     const { email, password } = req.body;
 
     if (email && password) {
-      const existingUser = await userModel.findOne({ email });
+      const existingUser = await userModel.findOne({ email } as any);
       if (existingUser) {
         return res
           .status(400)
@@ -237,7 +237,7 @@ export const signIn = async (req: Request, res: Response) => {
       return res.status(400).json({ success: false, message: "Email and password required" });
     }
 
-    const user = await userModel.findOne({ email });
+    const user = await userModel.findOne({ email } as any);
     
     // Check if user exists
     if (!user) {

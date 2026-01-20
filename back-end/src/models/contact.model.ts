@@ -4,9 +4,9 @@ export interface IContact extends Document {
   name: string;
   phoneNo: string;
   email: string;
-  owner: mongoose.Types.ObjectId,
+  owner: mongoose.Types.ObjectId;
   createdAt: Date;
-
+  updatedAt: Date;
 }
 
 const ContactSchema = new Schema<IContact>(
@@ -26,17 +26,19 @@ const ContactSchema = new Schema<IContact>(
       lowercase: true,
       trim: true,
     },
-    owner:{
-      type:mongoose.Schema.Types.ObjectId,
-      required:true,
-      ref:"User",
-    }
-
+    owner: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: "User",
+    },
   },
   {
     timestamps: true,
-  },
+  }
 );
 
-const Contact: Model<IContact> = mongoose.models.Contact || mongoose.model<IContact>("Contact", ContactSchema);
+const Contact: Model<IContact> = 
+  (mongoose.models.Contact as Model<IContact>) || 
+  mongoose.model<IContact>("Contact", ContactSchema);
+
 export default Contact;

@@ -1,16 +1,11 @@
 import { type Request, type Response } from "express";
-import Contact, { type IContact }  from "../models/contact.model.js";
-import userModel from "../models/user.model.js";
+import Contact from "../models/contact.model.js";
+import User from "../models/user.model.js";
 import jwt from "jsonwebtoken";
 import type AuthRequest from "../middlewares/verify-token.middleware.js";
-import {type QueryFilter } from "mongoose";
-import mongoose from "mongoose";
-import { stringify } from "node:querystring";
-
 
 export const getAllContacts = async (req: AuthRequest, res: Response) => {
   try {
-    // 1. Get the userId from the 'req.user' object attached by your middleware
     const userId = req.user?.userId;
 
     if (!userId) {
@@ -19,11 +14,9 @@ export const getAllContacts = async (req: AuthRequest, res: Response) => {
         .json({ success: false, message: "User not identified" });
     }
 
-    // 2. Use .find() to get ALL contacts for this specific user
-    // 3. Use .select() to only get the fields you need
-    const contacts = await Contact
-      .find({ owner: userId })
-      .select("_id name phoneNo email");
+    const contacts = await Contact.find({ owner: userId }).select(
+      "_id name phoneNo email"
+    );
 
     res.status(200).json({
       success: true,
@@ -48,17 +41,18 @@ export const createContact = async (req: AuthRequest, res: Response) => {
       .status(401)
       .json({ success: false, message: "User not identified" });
   }
+
   try {
     await Contact.create({
-      name: name,
-      phoneNo: phoneNo,
-      email: email,
+      name,
+      phoneNo,
+      email,
       owner: userId,
     });
 
-    const contacts = await Contact
-      .find({ owner: userId })
-      .select("_id name phoneNo email");
+    const contacts = await Contact.find({ owner: userId }).select(
+      "_id name phoneNo email"
+    );
 
     res.json({
       contacts,
@@ -82,12 +76,17 @@ export const deleteContact = async (req: AuthRequest, res: Response) => {
       .json({ success: false, message: "User not identified" });
   }
 
+  if (!contactId) {
+    return res
+      .status(400)
+      .json({ success: false, message: "Contact ID is required" });
+  }
+
   try {
-    // 1. Delete ONLY if the ID matches AND the owner matches
     const deletedContact = await Contact.findOneAndDelete({
       _id: contactId,
       owner: userId,
-    } as any);
+    });
 
     if (!deletedContact) {
       return res.status(404).json({
@@ -96,10 +95,9 @@ export const deleteContact = async (req: AuthRequest, res: Response) => {
       });
     }
 
-    // 2. Fetch the REMAINING contacts for THIS user only
-    const contacts = await Contact
-      .find({ owner: userId })
-      .select("_id name phoneNo email");
+    const contacts = await Contact.find({ owner: userId }).select(
+      "_id name phoneNo email"
+    );
 
     res.json({
       success: true,
@@ -122,19 +120,19 @@ export const updateContact = async (req: AuthRequest, res: Response) => {
       .json({ success: false, message: "User not identified" });
   }
 
-  try {
+  if (!contactId) {
+    return res
+      .status(400)
+      .json({ success: false, message: "Contact ID is required" });
+  }
 
- const filter: QueryFilter<IContact> = { 
-  _id: new mongoose.Types.ObjectId(contactId), 
-  owner: new mongoose.Types.ObjectId(userId) 
-};
+  try {
     const { name, phoneNo, email } = req.body;
-      
-    // 1. Update ONLY if ID matches AND the owner matches
+
     const updatedContact = await Contact.findOneAndUpdate(
-      filter, // The Filter
-      { name, phoneNo, email }, // The Data to update
-      { new: true }, // Options: return the modified document
+      { _id: contactId, owner: userId },
+      { name, phoneNo, email },
+      { new: true }
     );
 
     if (!updatedContact) {
@@ -144,10 +142,9 @@ export const updateContact = async (req: AuthRequest, res: Response) => {
       });
     }
 
-    // 2. Fetch only THIS user's contacts for the frontend
-    const contacts = await Contact
-      .find({ owner: userId })
-      .select("_id name phoneNo email");
+    const contacts = await Contact.find({ owner: userId }).select(
+      "_id name phoneNo email"
+    );
 
     res.json({ success: true, contacts });
   } catch (err) {
@@ -164,11 +161,12 @@ export const searchContact = async (req: AuthRequest, res: Response) => {
       .status(401)
       .json({ success: false, message: "User not identified" });
   }
+
   try {
     const character = req.params.character;
-    const contacts = await Contact
-      .find({ owner: userId })
-      .select("_id name phoneNo email");
+    const contacts = await Contact.find({ owner: userId }).select(
+      "_id name phoneNo email"
+    );
 
     if (!character) {
       return res.json({ success: false, id: null });
@@ -202,23 +200,19 @@ export const signUp = async (req: Request, res: Response) => {
     const { email, password } = req.body;
 
     if (email && password) {
-       const filter: QueryFilter<IContact> = { 
-  email: stringify, 
- 
-};
-      const existingUser = await userModel.findOne(filter);
+      const existingUser = await User.findOne({ email });
+
       if (existingUser) {
         return res
           .status(400)
           .json({ success: false, message: "User already exists" });
       }
-      // 1. Create the user in the database
-      const newUser = await userModel.create({
-        email: email,
-        password: password, // Still plain text for now (not recommended)
+
+      const newUser = await User.create({
+        email,
+        password,
       });
 
-      // 4. GENERATE THE TOKEN (Essential for the login system to work)
       const JWT_SECRET = process.env.JWT_SECRET as string;
       const token = jwt.sign({ userId: newUser._id }, JWT_SECRET, {
         expiresIn: "1m",
@@ -227,7 +221,7 @@ export const signUp = async (req: Request, res: Response) => {
       res.status(200).json({
         success: true,
         message: "User created successfully",
-        token: token, // This is the "Passport" for your frontend
+        token,
       });
     } else {
       res.status(400).json({
@@ -243,36 +237,41 @@ export const signUp = async (req: Request, res: Response) => {
 
 export const signIn = async (req: Request, res: Response) => {
   const JWT_SECRET = process.env.JWT_SECRET as string;
+
   try {
     const { email, password } = req.body;
 
     if (!email || !password) {
-      return res.status(400).json({ success: false, message: "Email and password required" });
+      return res
+        .status(400)
+        .json({ success: false, message: "Email and password required" });
     }
 
-    const user = await userModel.findOne({ email });
-    
-    // Check if user exists
+    const user = await User.findOne({ email });
+
     if (!user) {
-      return res.status(401).json({ success: false, message: "Invalid Email" });
+      return res
+        .status(401)
+        .json({ success: false, message: "Invalid Email" });
     }
 
-    // Check Password
-    const isMatch = password === user.password; // Note: Use bcrypt.compare later!
+    const isMatch = password === user.password;
+
     if (!isMatch) {
-      return res.status(401).json({ success: false, message: "Invalid Password" });
+      return res
+        .status(401)
+        .json({ success: false, message: "Invalid Password" });
     }
 
-    // Generate Token
-    const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: "1m" });
-
-    // Send response and RETURN so the code below doesn't run
-    return res.json({ 
-      success: true, 
-      message: "Login successful", 
-      token 
+    const token = jwt.sign({ userId: user._id }, JWT_SECRET, {
+      expiresIn: "1m",
     });
 
+    return res.json({
+      success: true,
+      message: "Login successful",
+      token,
+    });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ success: false, message: "Server error" });

@@ -22,6 +22,5 @@ export const verifyToken = (req:AuthRequest, res:Response, next:NextFunction)=>{
    
   }
     
-  
 
 }

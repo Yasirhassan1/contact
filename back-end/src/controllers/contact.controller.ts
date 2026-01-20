@@ -1,8 +1,12 @@
 import { type Request, type Response } from "express";
-import contactModel from "../models/contact.model.js";
+import Contact, { type IContact }  from "../models/contact.model.js";
 import userModel from "../models/user.model.js";
 import jwt from "jsonwebtoken";
 import type AuthRequest from "../middlewares/verify-token.middleware.js";
+import {type QueryFilter } from "mongoose";
+import mongoose from "mongoose";
+import { stringify } from "node:querystring";
+
 
 export const getAllContacts = async (req: AuthRequest, res: Response) => {
   try {
@@ -17,8 +21,8 @@ export const getAllContacts = async (req: AuthRequest, res: Response) => {
 
     // 2. Use .find() to get ALL contacts for this specific user
     // 3. Use .select() to only get the fields you need
-    const contacts = await contactModel
-      .find({ owner: userId } as any)
+    const contacts = await Contact
+      .find({ owner: userId })
       .select("_id name phoneNo email");
 
     res.status(200).json({
@@ -45,15 +49,15 @@ export const createContact = async (req: AuthRequest, res: Response) => {
       .json({ success: false, message: "User not identified" });
   }
   try {
-    await contactModel.create({
+    await Contact.create({
       name: name,
       phoneNo: phoneNo,
       email: email,
       owner: userId,
     });
 
-    const contacts = await contactModel
-      .find({ owner: userId } as any)
+    const contacts = await Contact
+      .find({ owner: userId })
       .select("_id name phoneNo email");
 
     res.json({
@@ -80,7 +84,7 @@ export const deleteContact = async (req: AuthRequest, res: Response) => {
 
   try {
     // 1. Delete ONLY if the ID matches AND the owner matches
-    const deletedContact = await contactModel.findOneAndDelete({
+    const deletedContact = await Contact.findOneAndDelete({
       _id: contactId,
       owner: userId,
     } as any);
@@ -93,8 +97,8 @@ export const deleteContact = async (req: AuthRequest, res: Response) => {
     }
 
     // 2. Fetch the REMAINING contacts for THIS user only
-    const contacts = await contactModel
-      .find({ owner: userId } as any)
+    const contacts = await Contact
+      .find({ owner: userId })
       .select("_id name phoneNo email");
 
     res.json({
@@ -119,11 +123,16 @@ export const updateContact = async (req: AuthRequest, res: Response) => {
   }
 
   try {
-    const { name, phoneNo, email } = req.body;
 
+ const filter: QueryFilter<IContact> = { 
+  _id: new mongoose.Types.ObjectId(contactId), 
+  owner: new mongoose.Types.ObjectId(userId) 
+};
+    const { name, phoneNo, email } = req.body;
+      
     // 1. Update ONLY if ID matches AND the owner matches
-    const updatedContact = await contactModel.findOneAndUpdate(
-      { _id: contactId, owner: userId } as any, // The Filter
+    const updatedContact = await Contact.findOneAndUpdate(
+      filter, // The Filter
       { name, phoneNo, email }, // The Data to update
       { new: true }, // Options: return the modified document
     );
@@ -136,8 +145,8 @@ export const updateContact = async (req: AuthRequest, res: Response) => {
     }
 
     // 2. Fetch only THIS user's contacts for the frontend
-    const contacts = await contactModel
-      .find({ owner: userId } as any)
+    const contacts = await Contact
+      .find({ owner: userId })
       .select("_id name phoneNo email");
 
     res.json({ success: true, contacts });
@@ -157,8 +166,8 @@ export const searchContact = async (req: AuthRequest, res: Response) => {
   }
   try {
     const character = req.params.character;
-    const contacts = await contactModel
-      .find({ owner: userId } as any)
+    const contacts = await Contact
+      .find({ owner: userId })
       .select("_id name phoneNo email");
 
     if (!character) {
@@ -193,7 +202,11 @@ export const signUp = async (req: Request, res: Response) => {
     const { email, password } = req.body;
 
     if (email && password) {
-      const existingUser = await userModel.findOne({ email } as any);
+       const filter: QueryFilter<IContact> = { 
+  email: stringify, 
+ 
+};
+      const existingUser = await userModel.findOne(filter);
       if (existingUser) {
         return res
           .status(400)
@@ -207,7 +220,7 @@ export const signUp = async (req: Request, res: Response) => {
 
       // 4. GENERATE THE TOKEN (Essential for the login system to work)
       const JWT_SECRET = process.env.JWT_SECRET as string;
-      const token = jwt.sign({ userId: newUser._id } as any, JWT_SECRET, {
+      const token = jwt.sign({ userId: newUser._id }, JWT_SECRET, {
         expiresIn: "1m",
       });
 
@@ -237,7 +250,7 @@ export const signIn = async (req: Request, res: Response) => {
       return res.status(400).json({ success: false, message: "Email and password required" });
     }
 
-    const user = await userModel.findOne({ email } as any);
+    const user = await userModel.findOne({ email });
     
     // Check if user exists
     if (!user) {
@@ -251,7 +264,7 @@ export const signIn = async (req: Request, res: Response) => {
     }
 
     // Generate Token
-    const token = jwt.sign({ userId: user._id } as any, JWT_SECRET, { expiresIn: "1m" });
+    const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: "1m" });
 
     // Send response and RETURN so the code below doesn't run
     return res.json({ 

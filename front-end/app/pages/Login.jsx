@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useState } from "react";
+import { isTokenAvalable, writeTokenToLocalStorage } from "../api/api";
 
 export default function Login({ setIsLog }) {
   const [isSignUp, setIsSignUp] = useState(false);
@@ -16,7 +17,8 @@ export default function Login({ setIsLog }) {
         })
         .then((Response) => {
           alert(Response.data.success);
-          localStorage.setItem("userToken", Response.data.token);
+          writeTokenToLocalStorage(Response.data.token)
+          // localStorage.setItem("userToken", Response.data.token);
         })
         .catch((err) => {
           console.log(err);
@@ -28,9 +30,10 @@ export default function Login({ setIsLog }) {
           password: password,
         })
         .then((Response) => {
-          localStorage.setItem("userToken", Response.data.token);
+          writeTokenToLocalStorage(Response.data.token)
+          // localStorage.setItem("userToken", Response.data.token);
 
-          setIsLog(!!localStorage.getItem("userToken"));
+          setIsLog(isTokenAvalable);
         })
         .catch((err) => {
           console.log("Session expire");

@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { Contact } from "../types/types";
 import axios from "axios";
+import { isTokenAvalable, removeToken } from "../api/api";
 
 export const useContact = () => {
   const [contacts, setContacts] = useState<Contact[]>([]);
@@ -13,9 +14,7 @@ export const useContact = () => {
   const [searchIds, setSearchIds] = useState<string[] | null>([]);
   const [isSearched, setIsSearched] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [isLog, setIsLog] = useState<boolean>(
-    !!localStorage.getItem("userToken"),
-  );
+  const [isLog, setIsLog] = useState<boolean | null>(null);
   const NEXT_PUBLIC_ROOT_URL = process.env.NEXT_PUBLIC_ROOT_URL;
 
   const [form, setForm] = useState<Contact>({
@@ -40,8 +39,8 @@ export const useContact = () => {
       })
       .catch((err) => {
         if (err.status == 401) {
-          localStorage.removeItem("userToken");
-          setIsLog(!!localStorage.getItem("userToken"));
+          removeToken()
+          setIsLog(isTokenAvalable);
         }
         console.log(err);
       });
@@ -64,8 +63,8 @@ export const useContact = () => {
       })
       .catch((error) => {
         if (error.status == 401) {
-          localStorage.removeItem("userToken");
-          setIsLog(!!localStorage.getItem("userToken"));
+          removeToken()
+          setIsLog(isTokenAvalable);
         }
         console.error("Delete Error:", error);
         setIsLoading(false);
@@ -98,8 +97,8 @@ export const useContact = () => {
           setSearchIds(null);
           setIsLoading(false);
           if (error.status == 401) {
-            localStorage.removeItem("userToken");
-            setIsLog(!!localStorage.getItem("userToken"));
+            removeToken()
+            setIsLog(isTokenAvalable);
           }
         });
     } else {
@@ -136,8 +135,8 @@ export const useContact = () => {
       })
       .catch((error) => {
         if (error.status == 401) {
-          localStorage.removeItem("userToken");
-          setIsLog(!!localStorage.getItem("userToken"));
+          removeToken()
+          setIsLog(isTokenAvalable);
         }
         console.error("Update Error:", error);
         setIsLoading(false);
@@ -193,8 +192,8 @@ export const useContact = () => {
       .catch(function (error) {
         console.log(error);
         if (error.status == 401) {
-          localStorage.removeItem("userToken");
-          setIsLog(!!localStorage.getItem("userToken"));
+          removeToken()
+          setIsLog(isTokenAvalable);
         }
       });
 

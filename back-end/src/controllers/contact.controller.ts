@@ -1,5 +1,5 @@
 import { type Request, type Response } from "express";
-import contactModel from "../models/contact.model.js";
+import Contact from "../models/contact.model.js";
 import userModel from "../models/user.model.js";
 import jwt from "jsonwebtoken";
 import type AuthRequest from "../middlewares/verify-token.middleware.js";
@@ -17,7 +17,7 @@ export const getAllContacts = async (req: AuthRequest, res: Response) => {
 
     // 2. Use .find() to get ALL contacts for this specific user
     // 3. Use .select() to only get the fields you need
-    const contacts = await contactModel
+    const contacts = await Contact
       .find({ owner: userId })
       .select("_id name phoneNo email");
 
@@ -45,14 +45,14 @@ export const createContact = async (req: AuthRequest, res: Response) => {
       .json({ success: false, message: "User not identified" });
   }
   try {
-    await contactModel.create({
+    await Contact.create({
       name: name,
       phoneNo: phoneNo,
       email: email,
       owner: userId,
     });
 
-    const contacts = await contactModel
+    const contacts = await Contact
       .find({ owner: userId })
       .select("_id name phoneNo email");
 
@@ -80,7 +80,7 @@ export const deleteContact = async (req: AuthRequest, res: Response) => {
 
   try {
     // 1. Delete ONLY if the ID matches AND the owner matches
-    const deletedContact = await contactModel.findOneAndDelete({
+    const deletedContact = await Contact.findOneAndDelete({
       _id: contactId,
       owner: userId,
     });
@@ -93,7 +93,7 @@ export const deleteContact = async (req: AuthRequest, res: Response) => {
     }
 
     // 2. Fetch the REMAINING contacts for THIS user only
-    const contacts = await contactModel
+    const contacts = await Contact
       .find({ owner: userId })
       .select("_id name phoneNo email");
 
@@ -122,7 +122,7 @@ export const updateContact = async (req: AuthRequest, res: Response) => {
     const { name, phoneNo, email } = req.body;
 
     // 1. Update ONLY if ID matches AND the owner matches
-    const updatedContact = await contactModel.findOneAndUpdate(
+    const updatedContact = await Contact.findOneAndUpdate(
       { _id: contactId, owner: userId }, // The Filter
       { name, phoneNo, email }, // The Data to update
       { new: true }, // Options: return the modified document
@@ -136,7 +136,7 @@ export const updateContact = async (req: AuthRequest, res: Response) => {
     }
 
     // 2. Fetch only THIS user's contacts for the frontend
-    const contacts = await contactModel
+    const contacts = await Contact
       .find({ owner: userId })
       .select("_id name phoneNo email");
 
@@ -157,7 +157,7 @@ export const searchContact = async (req: AuthRequest, res: Response) => {
   }
   try {
     const character = req.params.character;
-    const contacts = await contactModel
+    const contacts = await Contact
       .find({ owner: userId })
       .select("_id name phoneNo email");
 

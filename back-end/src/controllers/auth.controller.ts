@@ -1,9 +1,16 @@
 import { type Request, type Response } from "express";
 import User from "../models/user.model.js";
 import jwt from "jsonwebtoken";
+import bcrypt from "bcrypt";
 export const signUp = async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
+    if (password.length < 8) {
+      return res.status(400).json({
+        success: false,
+        message: "Password should be atleast 8 characters",
+      });
+    }
 
     if (email && password) {
       const existingUser = await User.findOne({ email });
@@ -13,10 +20,11 @@ export const signUp = async (req: Request, res: Response) => {
           .status(400)
           .json({ success: false, message: "User already exists" });
       }
-
+      const salt = 10;
+      const hashedPassword = await bcrypt.hash(password, salt);
       const newUser = await User.create({
         email,
-        password,
+        password: hashedPassword,
       });
 
       const JWT_SECRET = process.env.JWT_SECRET as string;
@@ -58,8 +66,7 @@ export const signIn = async (req: Request, res: Response) => {
     if (!user) {
       return res.status(401).json({ success: false, message: "Invalid Email" });
     }
-
-    const isMatch = password === user.password;
+    const isMatch = await bcrypt.compare(password, user.password);
 
     if (!isMatch) {
       return res

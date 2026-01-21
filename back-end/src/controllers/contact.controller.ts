@@ -14,7 +14,7 @@ export const getAllContacts = async (req: AuthRequest, res: Response) => {
     }
 
     const contacts = await Contact.find({ owner: userId }).select(
-      "_id name phoneNo email"
+      "_id name phoneNo email",
     );
 
     res.status(200).json({
@@ -50,7 +50,7 @@ export const createContact = async (req: AuthRequest, res: Response) => {
     });
 
     const contacts = await Contact.find({ owner: userId }).select(
-      "_id name phoneNo email"
+      "_id name phoneNo email",
     );
 
     res.json({
@@ -95,7 +95,7 @@ export const deleteContact = async (req: AuthRequest, res: Response) => {
     }
 
     const contacts = await Contact.find({ owner: userId }).select(
-      "_id name phoneNo email"
+      "_id name phoneNo email",
     );
 
     res.json({
@@ -131,7 +131,7 @@ export const updateContact = async (req: AuthRequest, res: Response) => {
     const updatedContact = await Contact.findOneAndUpdate(
       { _id: contactId, owner: userId },
       { name, phoneNo, email },
-      { new: true }
+      { new: true },
     );
 
     if (!updatedContact) {
@@ -142,7 +142,7 @@ export const updateContact = async (req: AuthRequest, res: Response) => {
     }
 
     const contacts = await Contact.find({ owner: userId }).select(
-      "_id name phoneNo email"
+      "_id name phoneNo email",
     );
 
     res.json({ success: true, contacts });
@@ -164,7 +164,7 @@ export const searchContact = async (req: AuthRequest, res: Response) => {
   try {
     const character = req.params.character;
     const contacts = await Contact.find({ owner: userId }).select(
-      "_id name phoneNo email"
+      "_id name phoneNo email",
     );
 
     if (!character) {
@@ -193,4 +193,3 @@ export const searchContact = async (req: AuthRequest, res: Response) => {
     res.status(500).json({ success: false });
   }
 };
-

@@ -23,8 +23,9 @@ export default function Login({ setIsToken }: Readonly<LoginProps>) {
           alert(Response.data.success);
           writeTokenToLocalStorage(Response.data.token)
         })
-        .catch((err) => {
-          console.log(err);
+        .catch((error) => {
+          console.log(error);
+          alert(error.response?.data?.message)
         });
     } else {
       axios

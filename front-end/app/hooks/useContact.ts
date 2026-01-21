@@ -39,7 +39,7 @@ export const useContact = () => {
       .catch((err) => {
         if (err.status == 401) {
           removeToken()
-          setIsLog(isTokenAvalable);
+          setIsLog(isTokenAvalable());
         }
         console.log(err);
       });
@@ -63,7 +63,7 @@ export const useContact = () => {
       .catch((error) => {
         if (error.status == 401) {
           removeToken()
-          setIsLog(isTokenAvalable);
+          setIsLog(isTokenAvalable());
         }
         console.error("Delete Error:", error);
         setIsLoading(false);
@@ -97,7 +97,7 @@ export const useContact = () => {
           setIsLoading(false);
           if (error.status == 401) {
             removeToken()
-            setIsLog(isTokenAvalable);
+            setIsLog(isTokenAvalable());
           }
         });
     } else {

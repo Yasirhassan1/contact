@@ -37,8 +37,9 @@ export default function Login({ setIsToken }: Readonly<LoginProps>) {
           setIsToken(true)
           alert("login successfull")
         })
-        .catch(() => {
+        .catch((error) => {
           console.log("Session expire");
+          alert(error.response?.data?.message)
         });
     }
   }

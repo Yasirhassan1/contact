@@ -56,9 +56,7 @@ export const signIn = async (req: Request, res: Response) => {
     const user = await User.findOne({ email });
 
     if (!user) {
-      return res
-        .status(401)
-        .json({ success: false, message: "Invalid Email" });
+      return res.status(401).json({ success: false, message: "Invalid Email" });
     }
 
     const isMatch = password === user.password;

@@ -2,7 +2,7 @@
 import Loader from "@/components/ui/loader";
 import { useContact } from "@/hooks/useContact";
 import Login from "@/features/auth/components/login-form";
-import { isTokenAvalable } from "@/lib/local-storage";
+import { isTokenAvalable, removeToken } from "@/lib/local-storage";
 import ContactTable from "@/components/contact/contact-table";
 import ContactSearch from "@/components/contact/contact-search";
 import ContactForm from "@/components/contact/contact-form";
@@ -82,9 +82,21 @@ export default function Page() {
             className={`bg-white rounded-2xl shadow-lg p-5 sm:p-6 transition ${showForm || isEdit ? "blur-sm" : ""
               }`}
           >
-            <strong className="text-blue-600 text-2xl font-semibold block mb-4">
+            <div className="flex gap-4 justify-between" > 
+               <strong className="text-blue-600 text-2xl font-semibold block mb-4">
               Contact List
             </strong>
+              
+              <button className=" underline cursor-pointer text-black p-3 rounded-md   transition" onClick={
+                ()=>{
+                  removeToken()
+                setIsToken(false)
+                }
+                }>Log Out</button>
+
+                
+                </div>
+           
 
             <ContactSearch onChange={(val) => {
               setCharacter(val);
@@ -99,7 +111,7 @@ export default function Page() {
             />
 
             {/* Footer Button */}
-            <div className="mt-6">
+            <div className="mt-6 flex gap-4">
               <button
                 className="bg-blue-600 hover:bg-blue-700 transition shadow-md hover:shadow-lg rounded-xl text-white font-semibold p-4 w-full flex items-center justify-center gap-2"
                 onClick={() => {
@@ -107,7 +119,9 @@ export default function Page() {
                 }}
               >
                 <span className="text-xl">+</span> Create New Contact
+                
               </button>
+             
             </div>
           </div>
         </div>

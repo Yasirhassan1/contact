@@ -1,14 +1,18 @@
 import axios from "axios";
 import { useState } from "react";
-import { writeTokenToLocalStorage } from "../utility/local-storage";
+import { writeTokenToLocalStorage } from "@/lib/local-storage";
 
-export default function Login({setIsToken}) {
+interface LoginProps {
+  setIsToken: (isToken: boolean) => void;
+}
+
+export default function Login({ setIsToken }: Readonly<LoginProps>) {
   const [isSignUp, setIsSignUp] = useState(false);
   const NEXT_PUBLIC_ROOT_URL = process.env.NEXT_PUBLIC_ROOT_URL;
 
-  function checkUserAction(formData) {
-    let email = formData.get("email");
-    let password = formData.get("password");
+  function checkUserAction(formData: FormData) {
+    const email = formData.get("email");
+    const password = formData.get("password");
     if (isSignUp) {
       axios
         .post(`${NEXT_PUBLIC_ROOT_URL}/sign-up`, {
@@ -33,11 +37,12 @@ export default function Login({setIsToken}) {
           setIsToken(true)
           alert("login successfull")
         })
-        .catch((err) => {
+        .catch(() => {
           console.log("Session expire");
         });
     }
   }
+
   return (
     <form
       action={checkUserAction}
@@ -91,6 +96,7 @@ export default function Login({setIsToken}) {
       <p className="text-center text-sm text-gray-500">
         Don’t have an account?{" "}
         <button
+          type="button"
           className="text-blue-600 cursor-pointer hover:underline"
           onClick={() => setIsSignUp(!isSignUp)}
         >

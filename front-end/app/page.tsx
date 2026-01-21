@@ -2,6 +2,7 @@
 import Loader from "@/app/components/Loader";
 import { useContact } from "./hooks/useContact";
 import Login from "@/app/pages/Login";
+import { isTokenAvalable } from "./utility/local-storage";
 
 export default function Page() {
   const {
@@ -24,13 +25,13 @@ export default function Page() {
     updateContact,
     deleteContact,
     isAdded,
-    isLog,
-    setIsLog,
+    isToken,
+    setIsToken
   } = useContact();
 
   return (
     <>
-      {isLog ? (
+      {isTokenAvalable() ? (
         <div className="p-4 sm:p-6 md:p-8 w-full max-w-4xl mx-auto mt-10 relative">
           {isLoading && <Loader />}
           {showForm && (
@@ -231,7 +232,7 @@ export default function Page() {
           </div>
         </div>
       ) : (
-        <Login setIsLog={setIsLog} />
+        <Login setIsToken = {setIsToken} />
       )}
     </>
   );

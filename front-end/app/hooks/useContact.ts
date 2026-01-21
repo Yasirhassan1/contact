@@ -13,8 +13,8 @@ export const useContact = () => {
   const [searchIds, setSearchIds] = useState<string[] | null>([]);
   const [isSearched, setIsSearched] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [isLog, setIsLog] = useState<boolean | null>(null);
   const NEXT_PUBLIC_ROOT_URL = process.env.NEXT_PUBLIC_ROOT_URL;
+  const [isToken, setIsToken] = useState<boolean |null>(null)
 
   const [form, setForm] = useState<Contact>({
     _id: "",
@@ -22,7 +22,7 @@ export const useContact = () => {
     phoneNo: "",
     email: "",
   });
-  const token = getToken()
+  const token = getToken();
 
   function getAllContacts() {
     axios
@@ -39,7 +39,7 @@ export const useContact = () => {
       .catch((err) => {
         if (err.status == 401) {
           removeToken()
-          setIsLog(isTokenAvalable());
+          
         }
         console.log(err);
       });
@@ -63,7 +63,7 @@ export const useContact = () => {
       .catch((error) => {
         if (error.status == 401) {
           removeToken()
-          setIsLog(isTokenAvalable());
+       
         }
         console.error("Delete Error:", error);
         setIsLoading(false);
@@ -97,7 +97,7 @@ export const useContact = () => {
           setIsLoading(false);
           if (error.status == 401) {
             removeToken()
-            setIsLog(isTokenAvalable());
+          
           }
         });
     } else {
@@ -135,17 +135,17 @@ export const useContact = () => {
       .catch((error) => {
         if (error.status == 401) {
           removeToken()
-          setIsLog(isTokenAvalable);
+       
         }
         console.error("Update Error:", error);
         setIsLoading(false);
       });
   }
   useEffect(() => {
-    if (isLog) {
+    if (isTokenAvalable()) {
       getAllContacts();
     }
-  }, [showForm, isLog]);
+  }, [showForm, isToken]);
 
   useEffect(() => {
     const delayInputTimeoutId = setTimeout(() => {
@@ -192,7 +192,7 @@ export const useContact = () => {
         console.log(error);
         if (error.status == 401) {
           removeToken()
-          setIsLog(isTokenAvalable);
+          
         }
       });
 
@@ -220,8 +220,8 @@ export const useContact = () => {
     updateContact,
     deleteContact,
     isAdded,
-    isLog,
-    setIsLog,
+    isToken,
+     setIsToken
     // ... export everything else your UI needs
   };
 };

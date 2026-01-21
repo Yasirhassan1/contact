@@ -1,8 +1,8 @@
 import axios from "axios";
 import { useState } from "react";
-import { isTokenAvalable, writeTokenToLocalStorage } from "../utility/local-storage";
+import { writeTokenToLocalStorage } from "../utility/local-storage";
 
-export default function Login({ setIsLog }) {
+export default function Login({setIsToken}) {
   const [isSignUp, setIsSignUp] = useState(false);
   const NEXT_PUBLIC_ROOT_URL = process.env.NEXT_PUBLIC_ROOT_URL;
 
@@ -30,8 +30,8 @@ export default function Login({ setIsLog }) {
         })
         .then((Response) => {
           writeTokenToLocalStorage(Response.data.token)
+          setIsToken(true)
           alert("login successfull")
-          setIsLog(isTokenAvalable);
         })
         .catch((err) => {
           console.log("Session expire");

@@ -7,6 +7,16 @@ export const contactService = {
         return response.data.contacts;
     },
 
+    isLoggedIn: async () => {
+        const response = await api.get<{ authenticated: boolean }>("/is-logged-in");
+        return response.data.authenticated;
+    },
+
+    logout: async () => {
+        const response = await api.post<{ success: boolean; message: string }>("/logout");
+        return response.data;
+    },
+
     create: async (data: Partial<Contact>) => {
         const response = await api.post<{ contacts: Contact[] }>("/create", data);
         return response.data.contacts;

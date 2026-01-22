@@ -1,42 +1,37 @@
-import axios from "axios";
+import api from "@/services/api";
 import { useState } from "react";
-import { writeTokenToLocalStorage } from "@/lib/local-storage";
+import { useAuth } from "@/context/AuthContext";
 
-interface LoginProps {
-  setIsToken: (isToken: boolean) => void;
-}
 
-export default function Login({ setIsToken }: Readonly<LoginProps>) {
+export default function Login() {
   const [isSignUp, setIsSignUp] = useState(false);
-  const NEXT_PUBLIC_ROOT_URL = process.env.NEXT_PUBLIC_ROOT_URL;
+  const { login } = useAuth();
 
   function checkUserAction(formData: FormData) {
     const email = formData.get("email");
     const password = formData.get("password");
     if (isSignUp) {
-      axios
-        .post(`${NEXT_PUBLIC_ROOT_URL}/sign-up`, {
+      api
+        .post("/sign-up", {
           email: email,
           password: password,
         })
-        .then((Response) => {
-          alert(Response.data.success);
-          writeTokenToLocalStorage(Response.data.token)
+        .then(() => {
+          login(); // Update context state
         })
         .catch((error) => {
           console.log(error);
           alert(error.response?.data?.message)
         });
     } else {
-      axios
-        .post(`${NEXT_PUBLIC_ROOT_URL}/sign-in`, {
+      api
+        .post("/sign-in", {
           email: email,
           password: password,
         })
         .then((Response) => {
-          writeTokenToLocalStorage(Response.data.token)
-          setIsToken(true)
           alert("login successfull")
+          login(); // Update context state
         })
         .catch((error) => {
           console.log("Session expire");

@@ -2,10 +2,11 @@
 import Loader from "@/components/ui/loader";
 import { useContact } from "@/hooks/useContact";
 import Login from "@/features/auth/components/login-form";
-import { isTokenAvalable, removeToken } from "@/lib/local-storage";
 import ContactTable from "@/components/contact/contact-table";
 import ContactSearch from "@/components/contact/contact-search";
 import ContactForm from "@/components/contact/contact-form";
+import { useAuth } from "@/context/AuthContext";
+
 
 export default function Page() {
   const {
@@ -28,7 +29,8 @@ export default function Page() {
     updateContact,
     deleteContact,
     isAdded,
-    setIsToken
+    // isLoggedIn, // Removed
+    // setIsLoggedIn, // Removed
   } = useContact();
 
   const handleEdit = (id: string) => {
@@ -42,14 +44,31 @@ export default function Page() {
     setIsLoading(true);
   };
 
+
   // Filter contacts based on search
   const displayedContacts = isSearched
     ? contacts?.filter((cur) => searchIds?.includes(cur._id))
     : contacts;
+  /* 
+     Removed local auth state management:
+     - const [isLog, setIsLog] = useState<boolean |null>(null)
+     - useEffect for isAuthenticated()
+  */
+
+  const { isAuthenticated, logout } = useAuth();
+
+  // Sync the hook's login function with the component's setIsLoggedIn if needed, 
+  // but better to just use isAuthenticated directly. 
+  // Ideally, useContact should leverage useAuth or we pass the auth state to it if strictly necessary, 
+  // but for now we replace the local check.
+
+  // NOTE: isLog was tri-state (null=loading, true, false). 
+  // AuthContext handles loading internally (blocking children rendering until loaded), 
+  // so we can assume isAuthenticated is final when this component renders.
 
   return (
     <>
-      {isTokenAvalable() ? (
+      {isAuthenticated ? (
         <div className="p-4 sm:p-6 md:p-8 w-full max-w-4xl mx-auto mt-10 relative">
           {isLoading && <Loader />}
 
@@ -82,26 +101,28 @@ export default function Page() {
             className={`bg-white rounded-2xl shadow-lg p-5 sm:p-6 transition ${showForm || isEdit ? "blur-sm" : ""
               }`}
           >
-            <div className="flex gap-4 justify-between" > 
-               <strong className="text-blue-600 text-2xl font-semibold block mb-4">
-              Contact List
-            </strong>
-              
-              <button className=" underline cursor-pointer text-black p-3 rounded-md   transition" onClick={
-                ()=>{
-                  removeToken()
-                setIsToken(false)
-                }
-                }>Log Out</button>
+            <div className="flex gap-4 justify-between">
+              <strong className="text-blue-600 text-2xl font-semibold block mb-4">
+                Contact List
+              </strong>
 
-                
-                </div>
-           
+              <button
+                className=" underline cursor-pointer text-black p-3 rounded-md   transition"
+                onClick={() => {
+                  logout();
+                  // setIsLoggedIn(false); // Deprecated in favor of logout
+                }}
+              >
+                Log Out
+              </button>
+            </div>
 
-            <ContactSearch onChange={(val) => {
-              setCharacter(val);
-              setIsLoading(true);
-            }} />
+            <ContactSearch
+              onChange={(val) => {
+                setCharacter(val);
+                setIsLoading(true);
+              }}
+            />
 
             <ContactTable
               contacts={displayedContacts}
@@ -119,14 +140,12 @@ export default function Page() {
                 }}
               >
                 <span className="text-xl">+</span> Create New Contact
-                
               </button>
-             
             </div>
           </div>
         </div>
       ) : (
-        <Login setIsToken={setIsToken} />
+        <Login />
       )}
     </>
   );

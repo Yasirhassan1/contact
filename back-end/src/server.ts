@@ -2,7 +2,7 @@ import express from "express";
 import dotenv from 'dotenv'
 import connectDB from "./dbConnection/dbConnection.js";
 import { getAllContacts, createContact, deleteContact, updateContact, searchContact } from "./controllers/contact.controller.js";
-import { signUp, signIn } from "./controllers/auth.controller.js";
+import { signUp, signIn, isLoggedIn, logout } from "./controllers/auth.controller.js";
 import runAllMiddleware from "./middlewares/all.middleware.js";
 import { verifyToken } from "./middlewares/verify-token.middleware.js";
 
@@ -16,13 +16,15 @@ connectDB();
 
 app.post("/create", verifyToken, createContact);
 app.get("/", verifyToken, getAllContacts);
-app.delete("/delete/:id", verifyToken,  deleteContact);
-app.put("/edit/:id", verifyToken,  updateContact);
+app.delete("/delete/:id", verifyToken, deleteContact);
+app.put("/edit/:id", verifyToken, updateContact);
 app.get("/search/:character", verifyToken, searchContact);
 app.post("/sign-up", signUp);
 app.post("/sign-in", signIn);
+app.post("/logout", logout);
+app.get("/is-logged-in", verifyToken, isLoggedIn);
 
-app.listen(PORT, ()=>{
+app.listen(PORT, () => {
     console.log("App is running on port ", PORT)
 })
 

@@ -3,8 +3,7 @@ import { useState, useEffect } from "react";
 import { Contact } from "@/types/types";
 import { contactService } from "@/services/contact.service";
 import axios from "axios";
-import { isTokenAvalable, removeToken } from "@/lib/local-storage";
-
+import { useAuth } from "@/context/AuthContext";
 export const useContact = () => {
   const [contacts, setContacts] = useState<Contact[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -17,8 +16,8 @@ export const useContact = () => {
   const [isAdded, setIsAdded] = useState<boolean>(false);
   const [editId, setEditId] = useState<string>("");
   const [character, setCharacter] = useState<string>("");
-  const [isToken, setIsToken] = useState<boolean | null>(null);
-
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
+  const {isAuthenticated, logout} = useAuth()
   const [form, setForm] = useState<Contact>({
     _id: "",
     name: "",
@@ -26,15 +25,20 @@ export const useContact = () => {
     email: "",
   });
 
+ 
+
   // Helper to handle 401 errors
   const handleError = (error: unknown) => {
     console.error(error);
     if (axios.isAxiosError(error) && error.response?.status === 401) {
-      removeToken();
-      setIsToken(false);
+      
+      logout();
     }
     setIsLoading(false);
   };
+
+    
+ 
 
   const getAllContacts = async () => {
     try {
@@ -122,11 +126,12 @@ export const useContact = () => {
   };
 
   useEffect(() => {
-    if (isTokenAvalable()) {
+    if (isAuthenticated) {
       getAllContacts();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [showForm, isToken]);
+  }, [showForm, isAuthenticated]);
+
 
   // Debounced search
   useEffect(() => {
@@ -166,7 +171,7 @@ export const useContact = () => {
     createContact,
     updateContact,
     deleteContact,
-    isToken,
-    setIsToken,
+    isLoggedIn,
+    setIsLoggedIn,
   };
 };

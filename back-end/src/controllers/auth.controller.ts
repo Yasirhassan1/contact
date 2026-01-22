@@ -29,13 +29,19 @@ export const signUp = async (req: Request, res: Response) => {
 
       const JWT_SECRET = process.env.JWT_SECRET as string;
       const token = jwt.sign({ userId: newUser._id }, JWT_SECRET, {
-        expiresIn: "1m",
+        expiresIn: "15m",
       });
 
-      res.status(200).json({
+      res.status(200).cookie("token", token, {
+        httpOnly: true,
+        secure: false,
+        sameSite: "lax",
+        path: "/",
+        maxAge: 24 * 60 * 60 * 1000,
+      }).json({
         success: true,
         message: "User created successfully",
-        token,
+        isLoggedIn: true
       });
     } else {
       res.status(400).json({
@@ -75,16 +81,37 @@ export const signIn = async (req: Request, res: Response) => {
     }
 
     const token = jwt.sign({ userId: user._id }, JWT_SECRET, {
-      expiresIn: "1m",
+      expiresIn: "15m",
     });
 
-    return res.json({
+    return res.cookie("token", token, {
+      httpOnly: true,
+      secure: false,
+      sameSite: "lax",
+      path: "/",
+      maxAge: 900000,
+    }).json({
       success: true,
       message: "Login successful",
-      token,
     });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ success: false, message: "Server error" });
   }
+};
+
+export const isLoggedIn = async (req: Request, res: Response) => {
+  res.status(200).json({
+    authenticated: true
+  })
+}
+
+export const logout = async (req: Request, res: Response) => {
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: false,
+    sameSite: "lax",
+    path: "/"
+  });
+  res.status(200).json({ success: true, message: "Logged out successfully" });
 };

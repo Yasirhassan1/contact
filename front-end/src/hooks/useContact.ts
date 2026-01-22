@@ -17,7 +17,7 @@ export const useContact = () => {
   const [editId, setEditId] = useState<string>("");
   const [character, setCharacter] = useState<string>("");
   const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
-  const {isAuthenticated, logout} = useAuth()
+  const { isAuthenticated, logout } = useAuth();
   const [form, setForm] = useState<Contact>({
     _id: "",
     name: "",
@@ -25,21 +25,14 @@ export const useContact = () => {
     email: "",
   });
 
- 
-
   // Helper to handle 401 errors
   const handleError = (error: unknown) => {
     console.error(error);
     if (axios.isAxiosError(error) && error.response?.status === 401) {
-      
       logout();
-      
     }
     setIsLoading(false);
   };
-
-    
- 
 
   const getAllContacts = async () => {
     try {
@@ -60,8 +53,8 @@ export const useContact = () => {
       payload = {
         name: data.get("name") as string,
         phoneNo: data.get("phoneNo") as string,
-        email: data.get("email") as string
-      }
+        email: data.get("email") as string,
+      };
     } else {
       payload = data;
     }
@@ -132,7 +125,6 @@ export const useContact = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showForm, isAuthenticated]);
-
 
   // Debounced search
   useEffect(() => {

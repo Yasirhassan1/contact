@@ -3,9 +3,8 @@ export default async function isAuthenticated() {
   try {
     const data = await contactService.isLoggedIn();
     return data;
-    
   } catch (error) {
-    console.log(error)
-    return false
+    console.log(error);
+    return false;
   }
 }

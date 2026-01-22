@@ -2,7 +2,6 @@ import api from "@/services/api";
 import { useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 
-
 export default function Login() {
   const [isSignUp, setIsSignUp] = useState(false);
   const { login } = useAuth();
@@ -21,7 +20,7 @@ export default function Login() {
         })
         .catch((error) => {
           console.log(error);
-          alert(error.response?.data?.message)
+          alert(error.response?.data?.message);
         });
     } else {
       api
@@ -30,12 +29,12 @@ export default function Login() {
           password: password,
         })
         .then((Response) => {
-          alert("login successfull")
+          alert("login successfull");
           login(); // Update context state
         })
         .catch((error) => {
           console.log("Session expire");
-          alert(error.response?.data?.message)
+          alert(error.response?.data?.message);
         });
     }
   }

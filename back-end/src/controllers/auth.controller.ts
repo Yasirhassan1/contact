@@ -2,17 +2,30 @@ import { type Request, type Response } from "express";
 import User from "../models/user.model.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
+import z from "zod";
+import { LoginValidationSchema } from "../validation/validation.schema.ts";
 export const signUp = async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
-    if (password.length < 8) {
-      return res.status(400).json({
-        success: false,
-        message: "Password should be atleast 8 characters",
-      });
-    }
+     try{
 
-    if (email && password) {
+    LoginValidationSchema.parse({email, password})
+
+    }
+    catch(error){
+     if (error instanceof z.ZodError) {
+      console.log(error.issues[0]?.message)
+        return res.status(400).json({
+          success:false,
+          message: error.issues[0]?.message
+        })
+      
+    } else {
+      console.error("Unexpected error: ", error);
+    }
+    }
+   
+
       const existingUser = await User.findOne({ email });
 
       if (existingUser) {
@@ -43,12 +56,7 @@ export const signUp = async (req: Request, res: Response) => {
         message: "User created successfully",
         isLoggedIn: true
       });
-    } else {
-      res.status(400).json({
-        success: false,
-        message: "Missing credentials",
-      });
-    }
+     
   } catch (error) {
     console.log(error);
     res.status(500).json({ success: false });
@@ -60,11 +68,22 @@ export const signIn = async (req: Request, res: Response) => {
 
   try {
     const { email, password } = req.body;
+    try{
 
-    if (!email || !password) {
-      return res
-        .status(400)
-        .json({ success: false, message: "Email and password required" });
+    LoginValidationSchema.parse({email, password})
+
+    }
+    catch(error){
+     if (error instanceof z.ZodError) {
+      console.log(error.issues[0]?.message)
+        return res.status(400).json({
+          success:false,
+          message: error.issues[0]?.message
+        })
+      
+    } else {
+      console.error("Unexpected error: ", error);
+    }
     }
 
     const user = await User.findOne({ email });

@@ -34,8 +34,8 @@ export const signUp = async (req: Request, res: Response) => {
 
       res.status(200).cookie("token", token, {
         httpOnly: true,
-        secure: false,
-        sameSite: "lax",
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
         path: "/",
         maxAge: 24 * 60 * 60 * 1000,
       }).json({
@@ -86,8 +86,8 @@ export const signIn = async (req: Request, res: Response) => {
 
     return res.cookie("token", token, {
       httpOnly: true,
-      secure: false,
-      sameSite: "lax",
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
       path: "/",
       maxAge: 900000,
     }).json({

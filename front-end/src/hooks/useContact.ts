@@ -33,6 +33,7 @@ export const useContact = () => {
     if (axios.isAxiosError(error) && error.response?.status === 401) {
       
       logout();
+      
     }
     setIsLoading(false);
   };

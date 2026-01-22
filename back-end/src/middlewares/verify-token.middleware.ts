@@ -17,7 +17,15 @@ export const verifyToken = (req: AuthRequest, res: Response, next: NextFunction)
     next();
   } catch (error) {
     console.log(error)
+
+     res.clearCookie("token", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV ==="production",
+    sameSite: "strict",
+    path: "/"
+  });
     return res.status(401).json({ success: false, message: `Invalid or Expired Token`, });
+
 
   }
 

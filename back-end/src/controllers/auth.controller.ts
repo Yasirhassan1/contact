@@ -4,6 +4,7 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import z from "zod";
 import { LoginValidationSchema } from "../validation/validation.schema.js";
+
 export const signUp = async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
@@ -68,23 +69,23 @@ export const signIn = async (req: Request, res: Response) => {
 
   try {
     const { email, password } = req.body;
-    try{
+    // try{
 
-    LoginValidationSchema.parse({email, password})
+    // LoginValidationSchema.parse({email, password})
 
-    }
-    catch(error){
-     if (error instanceof z.ZodError) {
-      console.log(error.issues[0]?.message)
-        return res.status(400).json({
-          success:false,
-          message: error.issues[0]?.message
-        })
+    // }
+    // catch(error){
+    //  if (error instanceof z.ZodError) {
+    //   console.log(error.issues[0]?.message)
+    //     return res.status(400).json({
+    //       success:false,
+    //       message: error.issues[0]?.message
+    //     })
       
-    } else {
-      console.error("Unexpected error: ", error);
-    }
-    }
+    // } else {
+    //   console.error("Unexpected error: ", error);
+    // }
+    // }
 
     const user = await User.findOne({ email });
 

@@ -9,8 +9,6 @@ export const useContact = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [searchIds, setSearchIds] = useState<string[] | null>([]);
   const [isSearched, setIsSearched] = useState<boolean>(false);
-
-  // UI State
   const [showForm, setShowForm] = useState<boolean>(false);
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const [isAdded, setIsAdded] = useState<boolean>(false);

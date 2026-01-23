@@ -69,23 +69,9 @@ export const signIn = async (req: Request, res: Response) => {
 
   try {
     const { email, password } = req.body;
-    // try{
 
-    // LoginValidationSchema.parse({email, password})
-
-    // }
-    // catch(error){
-    //  if (error instanceof z.ZodError) {
-    //   console.log(error.issues[0]?.message)
-    //     return res.status(400).json({
-    //       success:false,
-    //       message: error.issues[0]?.message
-    //     })
-      
-    // } else {
-    //   console.error("Unexpected error: ", error);
-    // }
-    // }
+    LoginValidationSchema.parse({email, password})
+        
 
     const user = await User.findOne({ email });
 
@@ -115,6 +101,14 @@ export const signIn = async (req: Request, res: Response) => {
       message: "Login successful",
     });
   } catch (error) {
+      if (error instanceof z.ZodError) {
+      console.log(error.issues[0]?.message)
+        return res.status(400).json({
+          success:false,
+          message: error.issues[0]?.message
+        })
+      
+    }
     console.log(error);
     return res.status(500).json({ success: false, message: "Server error" });
   }

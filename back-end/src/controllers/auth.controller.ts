@@ -3,7 +3,7 @@ import User from "../models/user.model.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import z from "zod";
-import { LoginValidationSchema } from "../validation/validation.schema.ts";
+import { LoginValidationSchema } from "../validation/validation.schema.js";
 export const signUp = async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
@@ -106,7 +106,7 @@ export const signIn = async (req: Request, res: Response) => {
     return res.cookie("token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
       path: "/",
       maxAge: 900000,
     }).json({

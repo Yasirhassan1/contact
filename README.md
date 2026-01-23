@@ -1,28 +1,21 @@
-Contact Management System (Secure Full-Stack CRUD)A robust, full-stack application for managing contacts, built with a focus on security, performance, and scalable architecture.
-This project demonstrates a secure communication bridge between a Next.js frontend and an Express.js backend.
-Key FeaturesFull CRUD Functionality: Create, Read, Update, and Delete contacts.
-1. Real-time Search: Integrated with Debouncing to optimize API calls and enhance UX.
-2. .Server-Side Proxy: All API requests are proxied through Next.js Route Handlers to keep the backend infrastructure invisible to the client.
-3. Responsive Design: Fully deployed and optimized for all device sizes.
+Contact Management System 
+A robust, full-stack application for managing contacts, engineered with an enterprise-grade focus on security, data integrity, and scalable architecture.
+🛡️ Enhanced Security ArchitectureThis application implements a "Defense in Depth" strategy, moving beyond basic local storage to industry-standard security protocols.
+1. Advanced Authentication & Session ManagementHttpOnly JWT Cookies:
+   Utilizes jsonwebtoken for stateless authentication, with tokens stored in HttpOnly cookies via cookie-parser.
+   This effectively eliminates XSS (Cross-Site Scripting) risks by making tokens inaccessible to client-side JavaScript.
+2. Bcrypt Hashing:
+   Implements bcrypt for one-way salt-and-pepper password hashing, ensuring user credentials remain secure even in the event of a database compromise.
+3. Automatic Session Logic:
+   Engineered with precise maxAge and SameSite cookie attributes to maintain secure cross-origin sessions between the Next.js frontend and Express backend.
+4. Strict Data Validation & SanitizationZod Schema Validation:
+    Every incoming request is strictly parsed and validated using zod. This prevents "Mass Assignment" vulnerabilities and ensures the database only receives clean, typed      data.Mongoose Data Integrity: Leverages mongoose schemas to enforce strict data structures and relational integrity between users and their private contact lists.
+5. Production-Grade Infrastructure ProtectionHelmet.js & CORS:
+   Configured helmet to set secure HTTP headers (CSP, HSTS) and used cors with strict origin filtering to prevent unauthorized cross-domain requests.Express Rate Limit: Protections against brute-force and DoS attacks by throttling requests on sensitive endpoints like Login and Sign-up.
+6. Architectural Proxy:
+   All browser traffic is routed through Next.js Route Handlers, acting as a server-side proxy that keeps the physical Backend URL completely invisible to the client-side Network tab.
+🛠️ Tech Stack & Dependencies Component TechnologyKey Libraries Frontend Next.js (App Router) Axios, React, Lucide-React Backend Node.js, Express.js, jsonwebtoken, bcrypt Database MongoDB, mongoose, ValidationSchema-based zod Security Multi-Layered helmet, cookie-parser, express-rate-limit
 
-🛡️ Security Architecture
-This application implements "Defense in Depth" to ensure data integrity and prevent unauthorized access.
-1. Architectural Protection (The Proxy)Instead of the browser communicating directly with the Express API, it talks to a Next.js Server-Side Route.
-2. 2 Benefit: The Backend URL is never exposed in the browser's Network tab.Benefit: Protects against direct URL manipulation.
-3. 2. Header-Based AuthenticationA custom API Protector Middleware ensures that only our authorized frontend can communicate with the backend.
-   3. Requests must carry a secret x-api-key in the header.Unauthorized direct access returns a 403 Forbidden status.
-4. Production-Grade MiddlewaresHelmet.js: Sets various HTTP headers to protect against XSS, Clickjacking, and other common vulnerabilities.
-5. CORS: Strict "Origin" filtering to ensure only the deployed frontend can request data.
-6. Express Rate Limit: Prevents DDoS attacks and brute-force attempts by limiting requests per window of time.
-7. Data Sanitization: Ensures incoming JSON payloads are safe and formatted.
+⚙️ Environment ConfigurationTo run this project locally, create a .env file in both directories:Backend:PORT, MONGO_URI, JWT_SECRET, FRONTEND_URL, API_SECRET_KEYFrontend:NEXT_PUBLIC_API_URL, API_SECRET_KEY (Server-side only)📈 Optimization HighlightsDebouncing: Search inputs are debounced to minimize server load and optimize API consumption.Zod Parsing: Reduced server-side errors by catching malformed data before it reaches the controller logic.Secure Handshake: Configured Axios with withCredentials: true to enable seamless, secure transmission of HttpOnly cookies in a cross-origin environment
 
-🛠️ Tech Stack
-ComponentTechnologyFrontendNext.js (App Router), Axios, ReactBackendNode.js, 
-Express.jsDatabaseMongoDB (via Mongoose)DeploymentVercel (Frontend & Backend)SecurityHelmet, CORS, Rate-Limit, API-Key Auth
-⚙️ Environment VariablesTo run this project locally, you must create a .env file in both the frontend and backend folders 
-with the following keys:Backend:PORT, MONGO_URI, API_SECRET_KEY, FRONTEND_URLFrontend:NEXT_PUBLIC_API_URL, API_SECRET_KEY (Private)
-
-📈 Optimization
-Debouncing: Implemented on the search input to reduce server load by preventing an API call on every single keystroke.Next.js Image/Font Optimization: Used for high Core Web Vitals scores
-
-Live demo URL: https://contact-3k4v.vercel.app/
+Live Demo: https://contact-3k4v.vercel.app/

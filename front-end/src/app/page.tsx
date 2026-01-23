@@ -24,13 +24,10 @@ export default function Page() {
     isLoading,
     setIsLoading,
     form,
-    // setForm, // No longer needed directly in page
     createContact,
     updateContact,
     deleteContact,
     isAdded,
-    // isLoggedIn, // Removed
-    // setIsLoggedIn, // Removed
   } = useContact();
 
   const handleEdit = (id: string) => {
@@ -49,22 +46,10 @@ export default function Page() {
   const displayedContacts = isSearched
     ? contacts?.filter((cur) => searchIds?.includes(cur._id))
     : contacts;
-  /* 
-     Removed local auth state management:
-     - const [isLog, setIsLog] = useState<boolean |null>(null)
-     - useEffect for isAuthenticated()
-  */
 
   const { isAuthenticated, logout } = useAuth();
 
-  // Sync the hook's login function with the component's setIsLoggedIn if needed, 
-  // but better to just use isAuthenticated directly. 
-  // Ideally, useContact should leverage useAuth or we pass the auth state to it if strictly necessary, 
-  // but for now we replace the local check.
 
-  // NOTE: isLog was tri-state (null=loading, true, false). 
-  // AuthContext handles loading internally (blocking children rendering until loaded), 
-  // so we can assume isAuthenticated is final when this component renders.
 
   return (
     <>
@@ -98,7 +83,7 @@ export default function Page() {
 
           {/* MAIN CARD */}
           <div
-            className={`bg-white rounded-2xl shadow-lg p-5 sm:p-6 transition ${showForm || isEdit ? "blur-sm" : ""
+            className={`bg-white rounded-2xl border border-gray-300 shadow-lg p-5 sm:p-6 transition ${showForm || isEdit ? "blur-sm" : ""
               }`}
           >
             <div className="flex gap-4 justify-between items-center">

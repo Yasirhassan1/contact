@@ -110,7 +110,7 @@ export const signIn = async (req: Request, res: Response) => {
       
     }
     console.log(error);
-    return res.status(500).json({ success: false, message: "Server error" });
+    return res.status(500).json({ success: false, message: `Server error ${error}` });
   }
 };
 

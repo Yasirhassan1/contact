@@ -42,7 +42,7 @@ export default function Login() {
   return (
     <form
       action={checkUserAction}
-      className="w-full max-w-md bg-white p-8 rounded-2xl shadow-xl space-y-6 mx-auto"
+      className="w-full max-w-md bg-white p-8 border border-gray-300 rounded-2xl shadow-xl space-y-6 mx-auto absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
     >
       {/* Heading */}
       <div className="text-center">

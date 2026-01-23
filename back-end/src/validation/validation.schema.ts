@@ -7,3 +7,4 @@ export const LoginValidationSchema = z.object({
 email: EmailSchema,
 password: PasswordSchema
 })
+

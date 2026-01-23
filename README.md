@@ -16,6 +16,8 @@ A robust, full-stack application for managing contacts, engineered with an enter
    All browser traffic is routed through Next.js Route Handlers, acting as a server-side proxy that keeps the physical Backend URL completely invisible to the client-side Network tab.
 🛠️ Tech Stack & Dependencies Component TechnologyKey Libraries Frontend Next.js (App Router) Axios, React, Lucide-React Backend Node.js, Express.js, jsonwebtoken, bcrypt Database MongoDB, mongoose, ValidationSchema-based zod Security Multi-Layered helmet, cookie-parser, express-rate-limit
 
-⚙️ Environment ConfigurationTo run this project locally, create a .env file in both directories:Backend:PORT, MONGO_URI, JWT_SECRET, FRONTEND_URL, API_SECRET_KEYFrontend:NEXT_PUBLIC_API_URL, API_SECRET_KEY (Server-side only)📈 Optimization HighlightsDebouncing: Search inputs are debounced to minimize server load and optimize API consumption.Zod Parsing: Reduced server-side errors by catching malformed data before it reaches the controller logic.Secure Handshake: Configured Axios with withCredentials: true to enable seamless, secure transmission of HttpOnly cookies in a cross-origin environment
+⚙️ Environment ConfigurationTo run this project locally, create a .env file in both directories:Backend:PORT, MONGO_URI, JWT_SECRET, FRONTEND_URL, API_SECRET_KEYFrontend:NEXT_PUBLIC_API_URL, API_SECRET_KEY (Server-side only)
+
+📈 Optimization Highlights Debouncing: Search inputs are debounced to minimize server load and optimize API consumption.Zod Parsing: Reduced server-side errors by catching malformed data before it reaches the controller logic.Secure Handshake: Configured Axios with withCredentials: true to enable seamless, secure transmission of HttpOnly cookies in a cross-origin environment
 
 Live Demo: https://contact-3k4v.vercel.app/
